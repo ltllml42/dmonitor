@@ -17,14 +17,14 @@ public class YesswController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "yesswCaseList")
+    /*@RequestMapping(value = "yesswCaseList")
     public ResultData yesswCaseList(CapYesswCase capYesswCase, HttpServletRequest request) {
 
         ResultData result = new ResultData();
         result.setFlag(true);
         result.setMsg("success");
         return result;
-    }
+    }*/
 
 
 }
