@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+    <!-- bootstrap & fontawesome -->
+    <link rel="stylesheet" href="../assets/css/bootstrap.css" />
+    <link rel="stylesheet" href="../assets/css/font-awesome.css" />
+    <!-- page specific plugin styles -->
+    <link rel="stylesheet" href="../assets/css/bootstrap-duallistbox.min.css" />
+    <link rel="stylesheet" href="../assets/css/bootstrap-multiselect.min.css" />
+    <link rel="stylesheet" href="../assets/css/select2.min.css" />
+    <link rel="stylesheet" href="../assets/css/jquery-confirm.css" />
+    <!-- page specific plugin styles -->
+    <!-- text fonts -->
+    <link rel="stylesheet" href="../assets/css/ace-fonts.css" />
+    <!-- ace styles -->
+    <link rel="stylesheet" href="../assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style" />
+
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="../assets/css/ace-part2.css" class="ace-main-stylesheet" />
+    <![endif]-->
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="../assets/css/ace-ie.css" />
+    <![endif]-->
+    <!-- inline styles related to this page -->
+    <!-- ace settings handler -->
+    <script src="../assets/js/ace-extra.js"></script>
+    <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+    <!--[if lte IE 8]>
+    <script src="../assets/js/html5shiv.js"></script>
+    <script src="../assets/js/respond.js"></script>
+    <![endif]-->
+    <title>获取案件</title>
+</head>
+<body>
+<body class="no-skin">
+<div class="main-container" id="main-container">
+    <!-- /section:basics/sidebar -->
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="page-content">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <form class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="chine">
+                                    选择推送街道：
+                                </label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <select id="chine" name="chine">
+                                        <option value="东华门街道">东华门街道</option>
+                                        <option value="景山街道">景山街道</option>
+                                        <option value="交道口街道">交道口街道</option>
+                                        <option value="安定门街道">安定门街道</option>
+                                        <option value="北新桥街道">北新桥街道</option>
+                                        <option value="东四街道">东四街道</option>
+                                        <option value="朝阳门街道">朝阳门街道</option>
+                                        <option value="建国门街道">建国门街道</option>
+                                        <option value="东直门街道">东直门街道</option>
+                                        <option value="和平里街道">和平里街道</option>
+                                        <option value="前门街道">前门街道</option>
+                                        <option value="崇文门外街道">崇文门外街道</option>
+                                        <option value="东花市街道">东花市街道</option>
+                                        <option value="龙潭街道">龙潭街道</option>
+                                        <option value="体育馆路街道">体育馆路街道</option>
+                                        <option value="天坛街道">天坛街道</option>
+                                        <option value="永定门外街道">永定门外街道</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="form-field-8">
+                                    回复内容：
+                                </label>
+                                <div class="col-sm-9">
+                                    <textarea class="form-control" id="form-field-8" placeholder="回复内容"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="form-field-8">
+                                    回退标记（系统自动分发）
+                                </label>
+                                <div class="col-sm-9">
+                                    <!--  名字 回退 -->
+                                    <select class="" name="formField">
+                                        <option value="回退">回退</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="clearfix form-actions">
+                                <div class="col-md-offset-3 col-md-9">
+                                    <button id="accessCasesCount" class="btn btn-info" type="button">
+                                        <i class="ace-icon fa fa-check bigger-110"></i>
+                                        确认推送案件（需要做一次确认工作。）
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.page-content -->
+        </div>
+    </div><!-- /.main-content -->
+
+
+
+</div><!-- /.main-container -->
+<!-- basic scripts -->
+<!--[if !IE]> -->
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='../assets/js/jquery.js'>"+"<"+"/script>");
+</script>
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='../assets/js/jquery1x.js'>"+"<"+"/script>");
+</script>
+<![endif]-->
+<script type="text/javascript">
+    if('ontouchstart' in document.documentElement) document.write("<script src='../assets/js/jquery.mobile.custom.js'>"+"<"+"/script>");
+</script>
+<script src="../assets/js/bootstrap.js"></script>
+
+<!-- page specific plugin scripts -->
+
+<!--[if lte IE 8]>
+<script src="../assets/js/excanvas.js"></script>
+<![endif]-->
+<script src="../assets/js/jquery-ui.custom.js"></script>
+<script src="../assets/js/jquery.ui.touch-punch.js"></script>
+<script src="../assets/js/chosen.jquery.js"></script>
+<script src="../assets/js/fuelux/fuelux.spinner.js"></script>
+<script src="../assets/js/date-time/bootstrap-datepicker.js"></script>
+<script src="../assets/js/date-time/bootstrap-timepicker.js"></script>
+<script src="../assets/js/date-time/moment.js"></script>
+<script src="../assets/js/date-time/daterangepicker.js"></script>
+<script src="../assets/js/date-time/bootstrap-datetimepicker.js"></script>
+<script src="../assets/js/bootstrap-colorpicker.js"></script>
+<script src="../assets/js/jquery.knob.js"></script>
+<script src="../assets/js/jquery.autosize.js"></script>
+<script src="../assets/js/jquery.inputlimiter.1.3.1.js"></script>
+<script src="../assets/js/jquery.maskedinput.js"></script>
+<script src="../assets/js/bootstrap-tag.js"></script>
+<!-- ace scripts -->
+<script src="../assets/js/ace/elements.scroller.js"></script>
+<script src="../assets/js/ace/elements.colorpicker.js"></script>
+<script src="../assets/js/ace/elements.fileinput.js"></script>
+<script src="../assets/js/ace/elements.typeahead.js"></script>
+<script src="../assets/js/ace/elements.wysiwyg.js"></script>
+<script src="../assets/js/ace/elements.spinner.js"></script>
+<script src="../assets/js/ace/elements.treeview.js"></script>
+<script src="../assets/js/ace/elements.wizard.js"></script>
+<script src="../assets/js/ace/elements.aside.js"></script>
+<script src="../assets/js/ace/ace.js"></script>
+<script src="../assets/js/ace/ace.ajax-content.js"></script>
+<script src="../assets/js/ace/ace.touch-drag.js"></script>
+<script src="../assets/js/ace/ace.sidebar.js"></script>
+<script src="../assets/js/ace/ace.sidebar-scroll-1.js"></script>
+<script src="../assets/js/ace/ace.submenu-hover.js"></script>
+<script src="../assets/js/ace/ace.widget-box.js"></script>
+<script src="../assets/js/ace/ace.settings.js"></script>
+<script src="../assets/js/ace/ace.settings-rtl.js"></script>
+<script src="../assets/js/ace/ace.settings-skin.js"></script>
+<script src="../assets/js/ace/ace.widget-on-reload.js"></script>
+<script src="../assets/js/ace/ace.searchbox-autocomplete.js"></script>
+<script src="../assets/js/jquery.bootstrap-duallistbox.min.js"></script>
+<script src="../assets/js/jquery.raty.min.js"></script>
+<script src="../assets/js/select2.min.js"></script>
+<script src="../assets/js/bootstrap-multiselect.min.js"></script>
+<script src="../assets/js/jquery-typeahead.js"></script>
+<!-- inline scripts related to this page -->
+<script type="text/javascript">
+    jQuery(function($) {
+        $("#chine").select2();
+        $("#accessCasesCount").click(function(){
+            $.confirm({
+                title: '查看抓取详情',
+                content: 'url:InterfaceCount.html',
+                onContentReady: function () {
+                },
+                boxWidth: '1000px',
+                useBootstrap: false,
+                buttons:{
+                    cancel:{
+                        text:"取消",
+                        btnClass:'btn-primary',
+                        keys:['esc'],
+                        action:function(){
+                            //alert(111);
+                        }
+                    }
+                }
+            });
+        });
+        $(document).one('ajaxloadstart.page', function(e) {
+            $('textarea[class*=autosize]').trigger('autosize.destroy');
+            $('.limiterBox,.autosizejs').remove();
+            $('.daterangepicker.dropdown-menu,.colorpicker.dropdown-menu,.bootstrap-datetimepicker-widget.dropdown-menu').remove();
+        });
+    });
+</script>
+</body>
+
+<!-- basic scripts -->
+<!--[if !IE]> -->
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='../assets/js/jquery.js'>"+"<"+"/script>");
+</script>
+<!-- <![endif]-->
+<!--[if IE]>
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='../assets/js/jquery1x.js'>"+"<"+"/script>");
+</script>
+<![endif]-->
+<script type="text/javascript">
+    if('ontouchstart' in document.documentElement) document.write("<script src='../assets/js/jquery.mobile.custom.js'>"+"<"+"/script>");
+    $(function(){
+        var Sys = {};
+    var ua = navigator.userAgent.toLowerCase();
+    if (window.ActiveXObject){
+        Sys.ie = ua.match(/msie ([\d.]+)/)[1];
+        if (Sys.ie<=9){
+            $('#ie_lt9_alert').css({'display':'block'});  //浏览器版本太旧提示。
+        }
+    }
+    });
+
+</script>
+<script src="../assets/js/bootstrap.js"></script>
+<!-- ace scripts -->
+<script src="../assets/js/ace/elements.scroller.js"></script><!--不能删除-->
+<script src="../assets/js/ace/elements.fileinput.js"></script><!--Bootstrap 的文件上传，可删除-->
+<script src="../assets/js/ace/elements.typeahead.js"></script><!--Bootstrap 中的 Typeahead 组件就是通常所说的自动完成 AutoComplete，可删除-->
+<script src="../assets/js/ace/elements.wysiwyg.js"></script><!--所见即所得，可删除-->
+<script src="../assets/js/ace/elements.spinner.js"></script><!--可删除-->
+<script src="../assets/js/ace/elements.treeview.js"></script><!--可删除：树视图：无关菜单-->
+<script src="../assets/js/ace/elements.wizard.js"></script><!--可删除-->
+<script src="../assets/js/ace/elements.aside.js"></script><!--可删除-->
+<script src="../assets/js/ace/ace.js"></script>
+<script src="../assets/js/ace/ace.ajax-content.js"></script><!--可删除-->
+<script src="../assets/js/ace/ace.touch-drag.js"></script><!--可删除-->
+<script src="../assets/js/ace/ace.sidebar.js"></script><!--侧栏菜单控制：关闭隐藏-->
+<script src="../assets/js/ace/ace.sidebar-scroll-1.js"></script><!--侧栏菜单相关：简洁版菜单会用到-->
+<script src="../assets/js/ace/ace.submenu-hover.js"></script><!--侧栏菜单相关-->
+<script src="../assets/js/ace/ace.widget-box.js"></script><!--可删除-->
+<script src="../assets/js/ace/ace.settings.js"></script><!--设置：不能删除-->
+<script src="../assets/js/ace/ace.settings-rtl.js"></script><!--设置：不能删除-->
+<script src="../assets/js/ace/ace.settings-skin.js"></script><!--设置皮肤：不能删除-->
+<script src="../assets/js/ace/ace.widget-on-reload.js"></script><!--可删除-->
+<script src="../assets/js/ace/ace.searchbox-autocomplete.js"></script><!--可删除-->
+<script src="../assets/js/jquery-confirm.js"></script>
+<script src="../assets/js/bootstrap-multiselect.min.js"></script>
+<script type="text/javascript">
+
+</script>
+
+
+<!-- inline scripts related to this page -->
+<style type="text/css">
+    div.page-content{padding: 0px;margin:0px;padding-left: 0px;/*padding-left: 18px;*/}
+    #main_iframe{
+        margin:0px;padding:0px;
+        position:relative;left:0px;top:0px;width: 100%;border:1px solid #ccc;overflow: hidden;
+    }
+    div.quick-nav{
+        border-bottom:1px solid #ccc;padding: 6px 3px 7px 3px;text-align: center;
+        color: #439251;background-color: #ffc26c; /*绿87b87f  黄ffc26c*/
+    }
+    #sidebar-collapse{color:red;}
+</style>
+</body>
+</html>
