@@ -38,7 +38,7 @@ public class MesServer {
         //去12345网站上按对应条件获取数据
         try {
             //HttpLogin.getYesswData();
-            caseCountService.saveYesswCase();
+            //caseCountService.saveYesswCase();
             result.setFlag(true);
             result.setMsg("获取信息成功");
             CaseCount count = caseCountService.getCount(Constant.TYPE_YESSW, null);

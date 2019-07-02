@@ -2,6 +2,7 @@ package com.capinfo.dcxm.dmonitor.entity;
 
 import javax.persistence.*;
 import java.sql.Time;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -33,7 +34,7 @@ public class CapBusiRecord {
     private String huGridding;
     private String callPhone;
     private String community;
-    private Time gatheringTime;
+    private Date gatheringTime;
     private String handlePlatform;
     private Time happenDate;
     private String infoGathering;
@@ -89,7 +90,7 @@ public class CapBusiRecord {
     private String infoId;
     private String limitTime;
     private String tempsuggestion;
-    private String deadLineTime;
+    private Date deadLineTime;
     private String yesswOrderId;
     private String yesswOrderState;
     private String yesswClaimUser;
@@ -383,11 +384,11 @@ public class CapBusiRecord {
 
     @Basic
     @Column(name = "GATHERING_TIME", nullable = true)
-    public Time getGatheringTime() {
+    public Date getGatheringTime() {
         return gatheringTime;
     }
 
-    public void setGatheringTime(Time gatheringTime) {
+    public void setGatheringTime(Date gatheringTime) {
         this.gatheringTime = gatheringTime;
     }
 
@@ -943,11 +944,11 @@ public class CapBusiRecord {
 
     @Basic
     @Column(name = "DEAD_LINE_TIME", nullable = true, length = 100)
-    public String getDeadLineTime() {
+    public Date getDeadLineTime() {
         return deadLineTime;
     }
 
-    public void setDeadLineTime(String deadLineTime) {
+    public void setDeadLineTime(Date deadLineTime) {
         this.deadLineTime = deadLineTime;
     }
 

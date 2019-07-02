@@ -15,14 +15,14 @@ public class YesswCaseInfo {
     private String yesswSendarea;
     private String yesswStatus;
     private String recordNumber;
-    private Date recordCreatetime;
+    private String recordCreatetime;
     private String recordStatus;
     private String recordTaskStatus;
     private String cityNumber;
     private String cityStatus;
-    private Date createTime;
+    private String createTime;
     private String content;
-    private Date recordDeadtime;
+    private String recordDeadtime;
 
     @Id
     @Column(name = "id", nullable = false, length = 64)
@@ -86,11 +86,11 @@ public class YesswCaseInfo {
 
     @Basic
     @Column(name = "record_createtime", nullable = true)
-    public Date getRecordCreatetime() {
+    public String getRecordCreatetime() {
         return recordCreatetime;
     }
 
-    public void setRecordCreatetime(Date recordCreatetime) {
+    public void setRecordCreatetime(String recordCreatetime) {
         this.recordCreatetime = recordCreatetime;
     }
 
@@ -116,11 +116,11 @@ public class YesswCaseInfo {
 
     @Basic
     @Column(name = "record_deadtime", nullable = true)
-    public Date getRecordDeadtime() {
+    public String getRecordDeadtime() {
         return recordDeadtime;
     }
 
-    public void setRecordDeadtime(Date recordDeadtime) {
+    public void setRecordDeadtime(String recordDeadtime) {
         this.recordDeadtime = recordDeadtime;
     }
 
@@ -146,11 +146,11 @@ public class YesswCaseInfo {
 
     @Basic
     @Column(name = "create_time", nullable = true)
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
