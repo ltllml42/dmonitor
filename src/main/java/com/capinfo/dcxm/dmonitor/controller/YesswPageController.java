@@ -4,6 +4,7 @@ package com.capinfo.dcxm.dmonitor.controller;
 import com.capinfo.dcxm.dmonitor.dao.YesswCaseInfoDao;
 import com.capinfo.dcxm.dmonitor.entity.YesswCaseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @RequestMapping(value = "case")
+@Controller
 public class YesswPageController {
 
     @Autowired
