@@ -105,7 +105,7 @@ public class YerSsWClient {
 		更新字段：A5ProcessInfo（Reason，A5ProcessorState）。
 		备注：若工单不属于本分中心的业务范围内，可退回工单。
 	 */
-	public boolean rejectOrder(A5ProcessInfo a5ProcessInfo){
+	/*public boolean rejectOrder(A5ProcessInfo a5ProcessInfo){
 		A5DelegateInfo a5Delegate=getA5DelegateInfo();
 		A5ServerSoapService soapService=new A5ServerSoapService();
 		A5ServerSoapDelegate delegate=soapService.getA5ServerSoapPort();
@@ -121,7 +121,7 @@ public class YerSsWClient {
 			e.printStackTrace();
 		}
 		return false;
-	}
+	}*/
 	/**
 	 *  签收后退回工单
 	 * 
@@ -130,7 +130,7 @@ public class YerSsWClient {
 		更新字段：A5ProcessInfo（Reason，A5ProcessorState）。
 		备注：若工单不属于本分中心的业务范围内，可退回工单。
 	 */
-	public boolean rejectSignOrder(A5ProcessInfo a5ProcessInfo){
+	/*public boolean rejectSignOrder(A5ProcessInfo a5ProcessInfo){
 		A5DelegateInfo a5Delegate=getA5DelegateInfo();
 		A5ServerSoapService soapService=new A5ServerSoapService();
 		A5ServerSoapDelegate delegate=soapService.getA5ServerSoapPort();
@@ -146,7 +146,7 @@ public class YerSsWClient {
 			e.printStackTrace();
 		}
 		return false;
-	}
+	}*/
 	
 	/**
 	 *  推送工单
@@ -154,7 +154,7 @@ public class YerSsWClient {
 	 * 解释：A5ProcessInfo ：主要提交数据为 A5ProcessInfo(HandleResult,ID, OrderUnitID)，返回 boolean 值.
 		更新字段：A5ProcessInfo（HandleResult，A5ProcessorState）。
 	 */
-	public boolean A5ReplyResult(A5ProcessInfo a5ProcessInfo){
+	/*public boolean A5ReplyResult(A5ProcessInfo a5ProcessInfo){
 		A5DelegateInfo a5Delegate=getA5DelegateInfo();
 		A5ProcessInfo info=getA5ProcessInfo(a5ProcessInfo.getID());
 		A5ServerSoapService soapService=new A5ServerSoapService();
@@ -172,14 +172,14 @@ public class YerSsWClient {
 			e.printStackTrace();
 		}
 		return false;
-	}
+	}*/
 	
 	/**
 	 * 申请延期
 	 * @param process
 	 * @return
 	 */
-	public boolean a5RequestDelay(A5ProcessInfo process){
+	/*public boolean a5RequestDelay(A5ProcessInfo process){
 		A5DelegateInfo a5Delegate=getA5DelegateInfo();
 		A5ProcessInfo info=getA5ProcessInfo(process.getID());
 		
@@ -196,7 +196,7 @@ public class YerSsWClient {
 			e.printStackTrace();
 		}
 		return false;
-		}
+	}*/
 	
 	
 	

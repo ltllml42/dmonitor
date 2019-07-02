@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface YesswCaseInfoDao extends JpaRepository<YesswCaseInfo, String> {
 
-    List<YesswCaseInfo> findByYesswNumber(String yesswNumber);
+    List<YesswCaseInfo> findByYesswCreatetimeAfterAndYesswCreatetimeBefore(String yesswCreatetimeBegin, String yesswCreatetimeEnd);
 
     List<YesswCaseInfo> findByYesswCreatetimeAfter(String beginCreatetime);
 

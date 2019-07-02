@@ -23,6 +23,8 @@ public class CaseCountService {
     private YesswCaseInfoDao yesswCaseInfoDao;
     @Autowired
     private CapBusiRecordDao capBusiRecordDao;
+    @Autowired
+    private SimpleMessageService simpleMessageService;
 
 
 
@@ -53,13 +55,14 @@ public class CaseCountService {
      * 如果这条数据是已经结案的，查一下在表里有没有这条数据，如果有把状态改成已结案的
      * @return
      */
-    public void saveYesswCase() {
+    public void saveYesswCase(String starttime, String endtime, String caseNum) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date nowDate = new Date();
         String beginStarttime = sdf.format(DateUtils.getBeforeDate(nowDate, 30)) + " 00:00:00";
         String endStarttime = sdf.format(nowDate) + " 20:00:00";
-        String beginCalltime = sdf.format(nowDate)+ " 08:00:00";
-        String endCalltime = sdf.format(nowDate)+ " 23:00:00";
+
+        String beginCalltime = StringUtils.isBlank(starttime)?sdf.format(nowDate)+ " 08:00:00":starttime;
+        String endCalltime = StringUtils.isBlank(endtime)?sdf.format(nowDate)+ " 23:00:00":endtime;
         int count = 0;
         Integer startPage=1;
         Integer totalPage=1;
@@ -106,6 +109,8 @@ public class CaseCountService {
                     }
                 }
                 //应该都需要查一下这条案件在96010中的案件号、状态，数字政通中的案件号、状态
+
+                //需要再改一下，改成批量保存数据的。暂时先这样写
                 if (flag) {
                     //结案的时候
                     if ("".equals(yesswCaseInfo.getYesswStatus())) {
@@ -164,10 +169,10 @@ public class CaseCountService {
         if (recordList != null && !recordList.isEmpty()) {
             CapBusiRecord record = recordList.get(0);
             yesswCaseInfo.setRecordNumber(record.getRecordNumber());
-            yesswCaseInfo.setRecordCreatetime(record.getGatheringTime());
+            yesswCaseInfo.setRecordCreatetime(sdf.format(record.getGatheringTime()));
             yesswCaseInfo.setRecordStatus(record.getNowState());
             yesswCaseInfo.setRecordTaskStatus(record.getTaskStatus());
-            yesswCaseInfo.setRecordDeadtime(sdf.parse(record.getDeadLineTime()));
+            yesswCaseInfo.setRecordDeadtime(sdf.format(record.getDeadLineTime()));
             yesswCaseInfo.setCityNumber(record.getIndividaulAtt5());
             //yesswCaseInfo.setCityStatus(record.get);
         }
@@ -176,7 +181,17 @@ public class CaseCountService {
         if (StringUtils.isBlank(yesswCaseInfo.getCityNumber())) {
             //查一下数字政通的接口，查城管任务号，状态
         }
-        yesswCaseInfo.setCreateTime(new Date());
+        yesswCaseInfo.setCreateTime(sdf.format(new Date()));
+    }
+
+
+    /**
+     * websocket发送信息
+     */
+    public void sendInfo() {
+
+
+
     }
 
 
