@@ -2,16 +2,16 @@
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://localhost:3306/lenos?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
-    username: root
-    password: root
-    driver-class-name: com.mysql.jdbc.Driver
+    #url: jdbc:mysql://localhost:3306/lenos?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
+    #username: root
+    #password: root
+    #driver-class-name: com.mysql.jdbc.Driver
   #oracle.jdbc.OracleDriver
     #oracle版
-#    driver-class-name: oracle.jdbc.OracleDriver
-#    url: jdbc:oracle:thin:@1.0.0.186:1521:orcl
-#    username: zzbhr
-#    password: zzbhr
+    url: jdbc:oracle:thin:@10.160.238.13:1521:hollycrm
+    username: hollycc
+    password: hollycc
+    driver-class-name: oracle.jdbc.OracleDriver
 
     filters: stat
     maxActive: 20
