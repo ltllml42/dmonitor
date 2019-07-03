@@ -3,6 +3,7 @@ package com.capinfo.dcxm.dmonitor.utils;
 import java.util.List;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 /**
@@ -51,9 +52,14 @@ public class JsonUtil {
 	 */
 	public static <T>T jsonStrToPo(String str,Class cls){
 		T obj = null;
-		Gson gson = new Gson();
-		obj =(T)gson.fromJson(str, cls);
-		return obj;
+		try {
+			Gson gson = new Gson();
+			obj =(T)gson.fromJson(str, cls);
+			return obj;
+		} catch (JsonSyntaxException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	/**
 	 * 将json字符串转换成list

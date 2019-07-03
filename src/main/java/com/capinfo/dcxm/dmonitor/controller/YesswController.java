@@ -3,9 +3,12 @@ package com.capinfo.dcxm.dmonitor.controller;
 import com.capinfo.dcxm.dmonitor.dao.YesswCaseInfoDao;
 import com.capinfo.dcxm.dmonitor.entity.YesswCaseInfo;
 import com.capinfo.dcxm.dmonitor.service.CaseCountService;
+import com.capinfo.dcxm.dmonitor.utils.CaseCount;
+import com.capinfo.dcxm.dmonitor.utils.Constant;
 import com.capinfo.dcxm.dmonitor.utils.ResultData;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,18 +37,15 @@ public class YesswController {
 
         String filingBeginTime = request.getParameter("filingBeginTime");
         String filingOverTime = request.getParameter("filingOverTime");
-        String grabTime = request.getParameter("grabTime");
-
-        List<YesswCaseInfo> list = new ArrayList<YesswCaseInfo>();
-        if (StringUtils.isNotBlank(filingBeginTime) && StringUtils.isNotBlank(filingOverTime)) {
-            list = yesswCaseInfoDao.findByYesswCreatetimeAfterAndYesswCreatetimeBefore(filingBeginTime, filingOverTime);
-        } else {
-            list = yesswCaseInfoDao.findAll();
-        }
+        String yesswNumber = request.getParameter("yesswNumber");
+        String currentPage = request.getParameter("currentPage");
+        int current = StringUtils.isBlank(currentPage)?0:Integer.parseInt(currentPage)-1;
+        //List<YesswCaseInfo> list = new ArrayList<YesswCaseInfo>();
+        Page<YesswCaseInfo> page = caseCountService.findPage(current, filingBeginTime, filingOverTime, yesswNumber);
         ResultData result = new ResultData();
         result.setFlag(true);
         result.setMsg("success");
-        result.setData(list);
+        result.setData(page);
         return result;
     }
 
@@ -72,17 +72,45 @@ public class YesswController {
         return result;
     }
 
-
-    @RequestMapping(value = "getDetial")
-    public ResultData getDetial(HttpServletRequest request) {
-        String id = request.getParameter("id");
-        //YesswCaseInfo caseInfo = yesswCaseInfoDao.getOne(id);
-        Optional<YesswCaseInfo> info = yesswCaseInfoDao.findById(id);
-        YesswCaseInfo yesswCaseInfo = info.get();
+    /**
+     * 定时器定时用websocket刷新页面中的统计。进入页面的时候立刻刷新一次
+     */
+    @RequestMapping(value = "sendInfo")
+    public ResultData sendInfo() {
         ResultData result = new ResultData();
+        List<CaseCount> caseCountList = new ArrayList<CaseCount>();
+        CaseCount yesswCount = caseCountService.getCount(Constant.TYPE_YESSW, null);
+        caseCountList.add(yesswCount);
+        CaseCount recordCount = caseCountService.getCount(Constant.TYPE_RECORD, null);
+        caseCountList.add(recordCount);
+        CaseCount finishCount = caseCountService.getCount(Constant.TYPE_FINISH, null);
+        caseCountList.add(finishCount);
+
         result.setFlag(true);
         result.setMsg("success");
-        result.setData(yesswCaseInfo);
+        result.setData(caseCountList);
+        return result;
+    }
+
+
+    /**
+     * 删除
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "delInfo")
+    public ResultData delInfo(HttpServletRequest request) {
+        ResultData result = new ResultData();
+        try {
+            String id = request.getParameter("id");
+            yesswCaseInfoDao.deleteById(id);
+            result.setFlag(true);
+            result.setMsg("success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.setFlag(false);
+            result.setMsg("fail");
+        }
         return result;
     }
 

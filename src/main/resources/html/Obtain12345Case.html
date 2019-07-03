@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="/assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style" />
     <link rel="stylesheet" href="/assets/css/bootstrap-datepicker3.min.css" />
     <link rel="stylesheet" href="/assets/css/bootstrap-datetimepicker.min.css" />
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/dataTables.bootstrap.css"/>
 
 
     <!--[if lte IE 9]>
@@ -80,16 +82,27 @@
     });
 
 
-    function selectData() {
+    function selectData(page) {
+
+        var currentPage = page==null?$("#currentPage").val():page;
 
         $.ajax({
             url:'/caseapi/yesswCaseList',
             type:'post',
-            data:{filingBeginTime:$("#filingBeginTime").val(),filingOverTime:$("#filingOverTime").val(),grabTime:$("#grabTime").val()},
+            data:{filingBeginTime:$("#filingBeginTime").val(),filingOverTime:$("#filingOverTime").val(),yesswNumber:$("#yesswNumber").val(),currentPage:currentPage},
             traditional: true,
             success:function(data){
                 console.log(data);
-                var list = data.data;
+                var totalElements = data.data.totalElements;
+                var totalPages = data.data.totalPages;
+                var number = data.data.number;
+                $("#currentPage").text(Number(number)+1);
+                $("#current").val(Number(number)+1);
+
+                $("#pageCount").text(totalElements);
+                $("#totalPage").text(totalPages);
+                $("#total").val(totalPages);
+                var list = data.data.content;
                 $("#tbody").empty();
                 for(var i=0;i<list.length;i++) {
                     //$("#tbody").append("<tr>");
@@ -101,7 +114,7 @@
                     +"<td>"+list[i].createTime+"</td>"
                     +"<td><span class='label label-sm label-warning'>"+list[i].yesswStatus+"</span></td>"
                     +"<td><div class='hidden-sm hidden-xs btn-group'><button onclick=\"seeDetail('"+list[i].id+"')\" class='btn btn-xs btn-success'><i class='ace-icon fa fa-check bigger-120'></i>查看抓取详情</button></div>"
-                    +"<button class='btn btn-xs btn-danger'><i class='ace-icon fa fa-trash-o bigger-120'></i>删除抓取结果</button></td>"
+                    +"<button class='btn btn-xs btn-danger' onclick=\"delInfo('"+list[i].id+"')\"><i class='ace-icon fa fa-trash-o bigger-120'></i>删除抓取结果</button></td>"
                     +"</tr>";
                     $("#tbody").append(str);
                 }
@@ -143,7 +156,11 @@
                                             <input type="text" class="input-sm date-timepicker form-control" placeholder="案件立案结束时间" name="filingOverTime" id="filingOverTime" value=""/>
                                         </div>
                                         </label>
-                                        抓取时间：
+                                        案件号：
+                                        <label class="inline">
+                                        <input type="text" class="input-sm form-control" id="yesswNumber"/>
+                                        </label>
+                                        <!--抓取时间：
                                         <label class="inline">
                                         <input type="text" class="input-sm date-timepicker form-control" name="grabTime" id="grabTime" placeholder="抓取时间" />
                                         <label class="inline">
@@ -152,7 +169,7 @@
                                         <select  name="graspState" class="input-sm form-control" id="form-field-select-1">
                                         <option value="失败">成功</option>
                                         <option value="成功">失败</option>
-                                        </select>
+                                        </select>-->
                                         <button type="button" class="btn btn-info btn-sm" id="selectInfo">
                                             <i class="ace-icon fa fa-search bigger-110"></i>查询
                                         </button>
@@ -226,6 +243,51 @@
                         </div><!-- /.span -->
                     </div><!-- /.row -->
                     <!-- PAGE CONTENT ENDS -->
+
+                    <div id="bottomTool" class="row-fluid" >
+                        <!--<div class="span6" style="width:25%;;margin-right: 10px;">
+                            <div class="dataTables_length" id="DataTables_Table_0_length">
+                                <label>
+                                    每页
+                                    <select id="pageSize" onchange="research()"
+                                            aria-controls="DataTables_Table_0" size="1" name="DataTables_Table_0_length">
+                                        <option selected="selected" value="10">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                    条记录
+                                </label>
+                            </div>
+                        </div>-->
+                        <input id="current" type="hidden"/>
+                        <input id="total" type="hidden"/>
+                        <div class="span6"  >
+                            <div  id="DataTables_Table_0_info" class="dataTables_info">20 项记录，共 <span id="pageCount"></span> 项,当前第<span id="currentPage"></span>页,共<span id="totalPage"></span>页
+
+                            <button class="btn btn-info btn-sm" onclick="firstPage()">首页</button>
+                            <button class="btn btn-info btn-sm" onclick="prePage()">上一页</button>
+                            <button class="btn btn-info btn-sm" onclick="nextPage()">下一页</button>
+                            <button class="btn btn-info btn-sm" onclick="lastPage()">尾页</button>
+                            </div>
+
+                            <!--<div>
+
+                                <ul id="previousNext" style="display: inline">
+                                    <li onclick="prePage()" class="prev disabled" style="display: inline-block"><a id="previousPage" href="javascript:void(0);">← 上一页</a></li>
+                                    &lt;!&ndash;<div id="page" style="float:left;">
+                                        <select id="pageNum"  onchange="search()"
+                                                style="width:50PX;margin-right:1px;" aria-controls="DataTables_Table_0" size="1" name="DataTables_Table_0_length">
+                                            <option selected="selected" value="1">1</option>
+                                        </select>
+                                    </div>&ndash;&gt;
+                                    <li class="next" onclick="nextPage()" style="display: inline-block"><a id="nextPage" href="javascript:void(0);">下一页 → </a></li>
+                                </ul>
+                            </div>-->
+                        </div>
+
+
+                    </div>
                 </div><!-- /.col -->
             </div><!-- /.row -->
         </div><!-- /.page-content -->
@@ -300,16 +362,18 @@
                     btnClass:"btn-primary",
                     keys:['enter'],
                     action:function(){
-                        //alert(this.$content.find('#caseNum').val());
-                        //alert(this.$content.find('#filingBeginTime').val());
-                        //alert(this.$content.find('#filingOverTime').val());
+                        var caseNum = this.$content.find('#caseNum').val();
+                        var filingBeginTime = this.$content.find('#filingBeginTime').val();
+                        var filingOverTime = this.$content.find('#filingOverTime').val();
+
                         $.ajax({
                             url:'/caseapi/getData',
                             data:{caseNum:this.$content.find('#caseNum').val(),filingBeginTime:this.$content.find('#filingBeginTime').val(),filingOverTime:this.$content.find('#filingOverTime').val()},
                             type:'post',
                             traditional: true,
                             success:function(data){
-
+                                layer.msg("获取数据完成");
+                                selectData();
                             }
                         });
                     }
@@ -351,44 +415,27 @@
 
         layer.open({
             type: 2,
-            area: ["1000px", "300px"],
+            area: ["1100px", "300px"],
             title:"<div align='center'>查看抓取详情</div>",
             fixed: false, //不固定
             maxmin: false,
             content: "/case/detailPage?id="+id
         });
 
-        /*$.confirm({
-            title: '查看抓取详情',
-            content: 'url:detailsGrasp.html,
-            onContentReady: function () {
-                //yesswNumber
-                /!*$.ajax({
-                    url:'/caseapi/getDetial',
-                    data:{id:id},
-                    type:'post',
-                    traditional: true,
-                    success:function(data){
-                        $("#yesswNumber").text(data.yesswNumber);
-                    }
-                })*!/
-
-            },
-            boxWidth: '1000px',
-            useBootstrap: false,
-            buttons:{
-                cancel:{
-                    text:"取消",
-                    btnClass:'btn-primary',
-                    keys:['esc'],
-                    action:function(){
-
-                    }
-                }
-            }
-        });*/
-
     }
+
+    function delInfo(id) {
+        $.ajax({
+            url:'/caseapi/delInfo',
+            data:{id:id},
+            type:'post',
+            traditional: true,
+            success:function(data){
+                selectData();
+            }
+        });
+    }
+
 
 
 
@@ -407,6 +454,35 @@
         }
     });
 
+    
+    function prePage() {
+        var currentPage = $("#current").val();
+
+        if (currentPage != "1") {
+            selectData(Number(currentPage)-1);
+        }
+
+    }
+
+    function nextPage() {
+        var currentPage = $("#current").val();
+        var totalPage = $("#total").val();
+        if (currentPage != totalPage) {
+            selectData(Number(currentPage)+1);
+        }
+
+    }
+
+    function firstPage() {
+        selectData(1);
+    }
+
+    function lastPage() {
+        var totalPage = $("#total").val();
+        selectData(totalPage);
+    }
+    
+    
 </script>
 
 
