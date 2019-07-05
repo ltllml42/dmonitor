@@ -83,13 +83,14 @@
 
 
     function selectData(page) {
-
         var currentPage = page==null?$("#currentPage").val():page;
-
+        $("#current").val(currentPage);
+        var form = $("#selectForm");
         $.ajax({
             url:'/caseapi/yesswCaseList',
             type:'post',
-            data:{filingBeginTime:$("#filingBeginTime").val(),filingOverTime:$("#filingOverTime").val(),yesswNumber:$("#yesswNumber").val(),currentPage:currentPage},
+            //data:{filingBeginTime:$("#filingBeginTime").val(),filingOverTime:$("#filingOverTime").val(),yesswNumber:$("#yesswNumber").val(),currentPage:currentPage,recordNumber:$("#recordNumber").val()},
+            data:form.serialize(),
             traditional: true,
             success:function(data){
                 console.log(data);
@@ -100,8 +101,10 @@
                 $("#current").val(Number(number)+1);
 
                 $("#pageCount").text(totalElements);
+
                 $("#totalPage").text(totalPages);
                 $("#total").val(totalPages);
+
                 var list = data.data.content;
                 $("#tbody").empty();
                 for(var i=0;i<list.length;i++) {
@@ -118,9 +121,6 @@
                     +"</tr>";
                     $("#tbody").append(str);
                 }
-
-
-                
             }
         });
 
@@ -146,20 +146,28 @@
 
                             <div class="widget-body">
                                 <div class="widget-main">
-                                    <form class="form-inline">
+                                    <form class="form-inline" id="selectForm">
+
+                                        <input id="current" type="hidden" name="current"/>
+                                        <input id="total" type="hidden" name="total"/>
                                         <label class="inline">
                                         </label>
                                         <label class="inline">
                                         <div class="input-daterange input-group">
-                                            <input type="text" class="input-sm date-timepicker form-control" placeholder="案件立案开始时间" name="filingBeginTime" id="filingBeginTime" value=""/>
+                                            <input type="text" class="input-sm date-timepicker form-control" placeholder="案件立案开始时间" name="yesswCreatetimeStart" id="filingBeginTime" value=""/>
                                             <span class="input-group-addon"><i class="fa fa-exchange"></i></span>
-                                            <input type="text" class="input-sm date-timepicker form-control" placeholder="案件立案结束时间" name="filingOverTime" id="filingOverTime" value=""/>
+                                            <input type="text" class="input-sm date-timepicker form-control" placeholder="案件立案结束时间" name="yesswCreatetimeEnd" id="filingOverTime" value=""/>
                                         </div>
                                         </label>
-                                        案件号：
+                                        12345案件号：
                                         <label class="inline">
-                                        <input type="text" class="input-sm form-control" id="yesswNumber"/>
+                                        <input type="text" class="input-sm form-control" id="yesswNumber" name="yesswNumber"/>
                                         </label>
+                                        96010案件号：
+                                        <label class="inline">
+                                            <input type="text" class="input-sm form-control" id="recordNumber" name="recordNumber"/>
+                                        </label>
+
                                         <!--抓取时间：
                                         <label class="inline">
                                         <input type="text" class="input-sm date-timepicker form-control" name="grabTime" id="grabTime" placeholder="抓取时间" />
@@ -260,8 +268,7 @@
                                 </label>
                             </div>
                         </div>-->
-                        <input id="current" type="hidden"/>
-                        <input id="total" type="hidden"/>
+
                         <div class="span6"  >
                             <div  id="DataTables_Table_0_info" class="dataTables_info">20 项记录，共 <span id="pageCount"></span> 项,当前第<span id="currentPage"></span>页,共<span id="totalPage"></span>页
 
@@ -431,6 +438,7 @@
             type:'post',
             traditional: true,
             success:function(data){
+                layer.msg("删除成功");
                 selectData();
             }
         });

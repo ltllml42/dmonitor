@@ -46,7 +46,9 @@ public class CaseCountService {
      * @return
      */
     public CaseCount getCount(String type, String way) {
-        //如果是反查的时候用这个方法，把查到的list也放进去
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        //如果是反查的时候用这个方法，把查到的list也放进去    way=='check'的时候
         CaseCount count = new CaseCount();
         switch (type) {
             case Constant.TYPE_YESSW:
@@ -77,6 +79,25 @@ public class CaseCountService {
                     count.setCaseList(finish);
                 }
                 break;
+            case Constant.TYPE_CITYNUMBER_WARNING:
+                //推送城管系统后未能获取到城管案件编号
+                count.setType(Constant.TYPE_CITYNUMBER_WARNING);
+                List<YesswCaseInfo> list = yesswCaseInfoDao.findByRecordStatusAndRecordTaskStatusAndCityNumberNull("核实结案", "等待结案");
+                count.setCount(list.size()+"");
+                if ("check".equals(way)) {
+                    count.setCaseList(list);
+                }
+                break;
+            case Constant.TYPE_DEADTIME:
+                //案件快到截止日期
+                count.setType(Constant.TYPE_DEADTIME);
+                String deadtime = sdf.format(DateUtils.getAfterDate(new Date(), 2));
+                List<YesswCaseInfo> deadtimeList = yesswCaseInfoDao.findByRecordDeadtimeBefore(deadtime);
+                count.setCount(deadtimeList.size()+"");
+                if ("check".equals(way)) {
+                    count.setCaseList(deadtimeList);
+                }
+                break;
         }
         return count;
     }
@@ -102,15 +123,7 @@ public class CaseCountService {
         QueryParam queryParam=new QueryParam();
         queryParam.setBeginStartTime(beginStarttime);
         queryParam.setEndStartTime(endStarttime);
-        /*if (StringUtils.isNotBlank(starttime)) {
-            queryParam.setBeginCallTime(starttime);
-        }
-        if (StringUtils.isNotBlank(endtime)) {
-            queryParam.setEndCallTime(endtime);
-        }
-        if (StringUtils.isNotBlank(caseNum)) {
-            queryParam.setOrderId(caseNum);
-        }*/
+
         if (StringUtils.isNotBlank(caseNum)) {
             queryParam.setOrderId(caseNum);
             if (StringUtils.isNotBlank(starttime)) {
@@ -148,6 +161,15 @@ public class CaseCountService {
                 startPage++;
             }
             List<YesswCaseInfo> caseList = yesswCaseInfoDao.findByYesswStatusNot(Constant.YESSW_STATUS_FINISH);
+
+            //这里需要in出来工单表里infoList中的12345工单号包含的数据
+            List<String> yesswOrderIdList = new ArrayList<String>();
+            for (YesswCaseInfo yesswCaseInfo : infoList) {
+                yesswOrderIdList.add(yesswCaseInfo.getYesswNumber());
+            }
+            List<CapBusiRecord> recordList = capBusiRecordDao.findByYesswOrderIdIn(yesswOrderIdList);
+            //把工单表查出来的字段都放到infoList里
+            setRecordInfo(infoList, recordList);
             //判断出来需要操作update或者insert的数据，放到这个新的集合里。统一一起操作数据库
             List<YesswCaseInfo> batchList = new ArrayList<YesswCaseInfo>();
             for (YesswCaseInfo yesswCaseInfo : infoList) {
@@ -162,23 +184,11 @@ public class CaseCountService {
                 }
                 //应该都需要查一下这条案件在96010中的案件号、状态，数字政通中的案件号、状态
                 if (flag) {
-                    try {
-                        getRecordInfoCityInfo(yesswCaseInfo);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    //yesswCaseInfoDao.save(yesswCaseInfo);
                     batchList.add(yesswCaseInfo);
                 } else {
                     //如果是没结案的才往数据库里插
                     if (!Constant.YESSW_STATUS_FINISH.equals(yesswCaseInfo.getYesswStatus())) {
-                        try {
-                            getRecordInfoCityInfo(yesswCaseInfo);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
                         yesswCaseInfo.setId(UUID.randomUUID().toString().replaceAll("-",""));
-                        //yesswCaseInfoDao.save(yesswCaseInfo);
                         batchList.add(yesswCaseInfo);
                     }
 
@@ -208,31 +218,33 @@ public class CaseCountService {
         return info;
     }
 
-    /**
-     * 根据12345案件号查询96010的工单号、状态，调取接口查询数字政通中的案件号、状态
-     * @param yesswCaseInfo
-     */
-    private void getRecordInfoCityInfo(YesswCaseInfo yesswCaseInfo) throws ParseException {
+
+
+    public void setRecordInfo(List<YesswCaseInfo> yesswCaseInfoList, List<CapBusiRecord> recordList) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        List<CapBusiRecord> recordList = capBusiRecordDao.findByYesswOrderId(yesswCaseInfo.getYesswNumber());
-        if (recordList != null && !recordList.isEmpty()) {
-            CapBusiRecord record = recordList.get(0);
-            yesswCaseInfo.setRecordNumber(record.getRecordNumber());
-            yesswCaseInfo.setRecordCreatetime(sdf.format(record.getGatheringTime()));
-            yesswCaseInfo.setRecordStatus(record.getNowState());
-            yesswCaseInfo.setRecordTaskStatus(record.getTaskStatus());
-            yesswCaseInfo.setRecordDeadtime(sdf.format(record.getDeadLineTime()));
-            yesswCaseInfo.setCityNumber(record.getIndividaulAtt5());
-            //yesswCaseInfo.setCityStatus(record.get);
+        for (YesswCaseInfo yesswCaseInfo : yesswCaseInfoList) {
+            for (CapBusiRecord capBusiRecord : recordList) {
+                yesswCaseInfo.setCreateTime(sdf.format(new Date()));
+                if (yesswCaseInfo.getYesswNumber().equals(capBusiRecord.getYesswOrderId()) && yesswCaseInfo.getYesswCreatetime().equals(capBusiRecord.getYessStartTime())) {
+                    yesswCaseInfo.setRecordNumber(capBusiRecord.getRecordNumber());
+                    yesswCaseInfo.setRecordCreatetime(sdf.format(capBusiRecord.getGatheringTime()));
+                    yesswCaseInfo.setRecordStatus(capBusiRecord.getNowState());
+                    yesswCaseInfo.setRecordTaskStatus(capBusiRecord.getTaskStatus());
+                    yesswCaseInfo.setRecordDeadtime(sdf.format(capBusiRecord.getDeadLineTime()));
+                    yesswCaseInfo.setCityNumber(capBusiRecord.getIndividaulAtt5());
+                    break;
+                }
+
+            }
         }
+        //在这下边可能要加上数字政通的接口，传入一个工单号的集合，得到对应的数据，把城管的工单状态在这里放回每个对应的对象里
 
 
-        if (StringUtils.isBlank(yesswCaseInfo.getCityNumber())) {
-            //查一下数字政通的接口，查城管任务号，状态
-        }
-        yesswCaseInfo.setCreateTime(sdf.format(new Date()));
+
     }
+
+
 
 
     /**
@@ -260,29 +272,54 @@ public class CaseCountService {
         CaseCount finishCount = getCount(Constant.TYPE_FINISH, null);
         result.setData(finishCount);
         simpleMessageService.sendTopicMessage("/topic/callback", JSON.toJSONString(result));
-    }
 
+        //推送城管系统后未能获取到城管案件编号
+        CaseCount cityNoNumberCount = getCount(Constant.TYPE_CITYNUMBER_WARNING, null);
+        result.setData(cityNoNumberCount);
+        simpleMessageService.sendTopicMessage("/topic/callback", JSON.toJSONString(result));
+
+        //案件快到截止日期
+        CaseCount deadtimeCount = getCount(Constant.TYPE_DEADTIME, null);
+        result.setData(deadtimeCount);
+        simpleMessageService.sendTopicMessage("/topic/callback", JSON.toJSONString(result));
+
+    }
 
     /**
-     * 分页
+     * 分页条件查询。暂时这样写，如果条件再多再改成传进来对象
      * @param currentPage
-     * @param filingBeginTime
-     * @param filingOverTime
      * @return
      */
-    public Page<YesswCaseInfo> findPage(int currentPage, String filingBeginTime, String filingOverTime, String yesswNumber) {
+    public Page<YesswCaseInfo> findPageQuery(int currentPage, YesswCaseInfo yesswCaseInfo) {
 
-        Sort sort = new Sort(Sort.Direction.DESC,"createTime"); //创建时间降序排序
-        Pageable pageable = new PageRequest(currentPage,Constant.PAGECOUNT,sort);
-        if (StringUtils.isNotBlank(yesswNumber)) {
-            return yesswCaseInfoDao.findByYesswNumber(yesswNumber, pageable);
-        }
-        if (StringUtils.isNotBlank(filingBeginTime) && StringUtils.isNotBlank(filingOverTime)) {
-            return yesswCaseInfoDao.findFirst20ByYesswCreatetimeAfterAndYesswCreatetimeBefore(filingBeginTime, filingOverTime, pageable);
-        } else {
-            return yesswCaseInfoDao.findAll(pageable);
-        }
+        Pageable pageable = new PageRequest(currentPage, Constant.PAGECOUNT);
+        Specification<YesswCaseInfo> specification = new Specification<YesswCaseInfo>(){
+
+            @Override
+            public Predicate toPredicate(Root<YesswCaseInfo> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder cb) {
+                List<Predicate> list = new ArrayList<Predicate>();
+                if (StringUtils.isNotBlank(yesswCaseInfo.getYesswCreatetimeStart())) {
+                    Predicate p1 = cb.greaterThanOrEqualTo(root.get("yesswCreatetime").as(String.class), yesswCaseInfo.getYesswCreatetimeStart());
+                    list.add(p1);
+                }
+                if (StringUtils.isNotBlank(yesswCaseInfo.getYesswCreatetimeEnd())) {
+                    Predicate p2 = cb.lessThanOrEqualTo(root.get("yesswCreatetime").as(String.class), yesswCaseInfo.getYesswCreatetimeEnd());
+                    list.add(p2);
+                }
+                if (StringUtils.isNotBlank(yesswCaseInfo.getYesswNumber())) {
+                    Predicate p3 = cb.equal(root.get("yesswNumber").as(String.class), yesswCaseInfo.getYesswNumber());
+                    list.add(p3);
+                }
+                if (StringUtils.isNotBlank(yesswCaseInfo.getRecordNumber())) {
+                    Predicate p4 = cb.equal(root.get("recordNumber").as(String.class), yesswCaseInfo.getRecordNumber());
+                    list.add(p4);
+                }
+                return cb.and(list.toArray(new Predicate[0]));
+            }
+        };
+        return yesswCaseInfoDao.findAll(specification, pageable);
     }
+
 
 
 }

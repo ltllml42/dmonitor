@@ -33,15 +33,10 @@ public class YesswController {
      * @return
      */
     @RequestMapping(value = "yesswCaseList")
-    public ResultData yesswCaseList(HttpServletRequest request) {
-
-        String filingBeginTime = request.getParameter("filingBeginTime");
-        String filingOverTime = request.getParameter("filingOverTime");
-        String yesswNumber = request.getParameter("yesswNumber");
-        String currentPage = request.getParameter("currentPage");
+    public ResultData yesswCaseList(YesswCaseInfo yesswCaseInfo, HttpServletRequest request) {
+        String currentPage = request.getParameter("current");
         int current = StringUtils.isBlank(currentPage)?0:Integer.parseInt(currentPage)-1;
-        //List<YesswCaseInfo> list = new ArrayList<YesswCaseInfo>();
-        Page<YesswCaseInfo> page = caseCountService.findPage(current, filingBeginTime, filingOverTime, yesswNumber);
+        Page<YesswCaseInfo> page = caseCountService.findPageQuery(current, yesswCaseInfo);
         ResultData result = new ResultData();
         result.setFlag(true);
         result.setMsg("success");
@@ -85,6 +80,12 @@ public class YesswController {
         caseCountList.add(recordCount);
         CaseCount finishCount = caseCountService.getCount(Constant.TYPE_FINISH, null);
         caseCountList.add(finishCount);
+        //推送城管系统后未能获取到城管案件编号
+        CaseCount cityNoNumberCount = caseCountService.getCount(Constant.TYPE_CITYNUMBER_WARNING, null);
+        caseCountList.add(cityNoNumberCount);
+        //案件快到截止日期
+        CaseCount deadtimeCount = caseCountService.getCount(Constant.TYPE_DEADTIME, null);
+        caseCountList.add(deadtimeCount);
 
         result.setFlag(true);
         result.setMsg("success");

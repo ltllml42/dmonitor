@@ -25,6 +25,15 @@ public class Constant {
      * 案件数量统计时用。已结案案件
      */
     public static final String TYPE_FINISH = "4";
+    /**
+     * 推送城管系统后未能获取到城管案件编号   5
+     */
+    public static final String TYPE_CITYNUMBER_WARNING = "5";
+    /**
+     * 案件快到截止日期     6
+     */
+    public static final String TYPE_DEADTIME = "6";
+
 
     /**
      * 12345案件状态是结案的    审核回复工单并完成

@@ -155,7 +155,7 @@
                                         </td>
                                         <td class="hidden-480" id="">
                                             <span class="label label-warning arrowed arrowed-right">
-                                                <a href="javascript:void(0)">1821044444</a>
+                                                <a href="javascript:void(0)" onclick="checkDetialList('5')"><span id="cityNoNumber"></span></a>
                                             </span>
                                         </td>
                                     </tr>
@@ -168,7 +168,7 @@
                                         </td>
                                         <td class="hidden-480">
                                         <span class="label label-danger arrowed">
-                                        <a href="javascript:void(0)">案件数3</a>
+                                        <a href="javascript:void(0)" onclick="checkDetialList('6')"><span id="deadtimeCount"></span></a>
                                         </span>
                                         </td>
                                     </tr>
@@ -297,6 +297,10 @@
                     $("#cityCount").text(count);
                 } else if (type == "4") {
                     $("#finishCount").text(count);
+                } else if (type == "5") {
+                    $("#cityNoNumber").text(count);
+                } else if (type == "6") {
+                    $("#deadtimeCount").text(count);
                 }
             });
         })
@@ -328,6 +332,10 @@
                         $("#cityCount").text(count);
                     } else if (type == "4") {
                         $("#finishCount").text(count);
+                    } else if (type == '5') {
+                        $("#cityNoNumber").text(count);
+                    } else if (type == '6') {
+                        $("#deadtimeCount").text(count);
                     }
 
                 }
