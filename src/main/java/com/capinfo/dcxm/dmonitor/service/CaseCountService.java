@@ -291,8 +291,8 @@ public class CaseCountService {
      * @return
      */
     public Page<YesswCaseInfo> findPageQuery(int currentPage, YesswCaseInfo yesswCaseInfo) {
-
-        Pageable pageable = new PageRequest(currentPage, Constant.PAGECOUNT);
+        Sort sort = new Sort(Sort.Direction.DESC,"createTime"); //创建时间降序排序
+        Pageable pageable = new PageRequest(currentPage, Constant.PAGECOUNT, sort);
         Specification<YesswCaseInfo> specification = new Specification<YesswCaseInfo>(){
 
             @Override
