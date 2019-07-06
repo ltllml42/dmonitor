@@ -301,6 +301,15 @@
                     $("#cityNoNumber").text(count);
                 } else if (type == "6") {
                     $("#deadtimeCount").text(count);
+                } else if (type == "7") {
+                    //不为0正常，为0则为异常
+                    if (count == "0") {
+                        $("#yesswNormal").hide();
+                        $("#yesswFail").show();
+                    } else {
+                        $("#yesswNormal").show();
+                        $("#yesswFail").hide();
+                    }
                 }
             });
         })
@@ -336,6 +345,15 @@
                         $("#cityNoNumber").text(count);
                     } else if (type == '6') {
                         $("#deadtimeCount").text(count);
+                    } else if (type == '7') {
+                        //不为0正常，为0则为异常
+                        if (count == "0") {
+                            $("#yesswNormal").hide();
+                            $("#yesswFail").show();
+                        } else {
+                            $("#yesswNormal").show();
+                            $("#yesswFail").hide();
+                        }
                     }
 
                 }

@@ -33,6 +33,10 @@ public class Constant {
      * 案件快到截止日期     6
      */
     public static final String TYPE_DEADTIME = "6";
+    /**
+     * 12345接口异常（或者两个小时之内没有数据）
+     */
+    public static final String TYPE_YESSW_EXCEPTION = "7";
 
 
     /**

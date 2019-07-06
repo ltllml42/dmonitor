@@ -92,6 +92,9 @@ public class YesswController {
         //案件快到截止日期
         CaseCount deadtimeCount = caseCountService.getCount(Constant.TYPE_DEADTIME, null);
         caseCountList.add(deadtimeCount);
+        //12345接口异常（或者两个小时之内没有数据）
+        CaseCount yesswExceptionCount = caseCountService.getCount(Constant.TYPE_YESSW_EXCEPTION, null);
+        caseCountList.add(yesswExceptionCount);
 
         result.setFlag(true);
         result.setMsg("success");
