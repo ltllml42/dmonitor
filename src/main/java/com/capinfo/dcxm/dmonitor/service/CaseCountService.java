@@ -25,8 +25,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.capinfo.dcxm.dmonitor.utils.Constant.YESSW_STATUS_FINISH;
-
 @Service
 public class CaseCountService {
 
@@ -195,6 +193,7 @@ public class CaseCountService {
                 }
             }
             yesswCaseInfoDao.saveAll(batchList);
+            //yesswCaseInfoDao.batchSave(batchList);
         } catch (IOException e) {
             e.printStackTrace();
         }

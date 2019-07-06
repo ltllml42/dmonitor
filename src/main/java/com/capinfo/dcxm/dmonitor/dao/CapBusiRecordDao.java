@@ -13,6 +13,8 @@ public interface CapBusiRecordDao extends JpaRepository<CapBusiRecord, String> {
 
     List<CapBusiRecord> findByYesswOrderIdIn(List<String> yesswOrderIds);
 
+    List<CapBusiRecord> findByRecordNumber(String recordNumber);
+
 
 
 }

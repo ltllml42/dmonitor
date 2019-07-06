@@ -3,10 +3,13 @@ package com.capinfo.dcxm.dmonitor.controller;
 import com.capinfo.dcxm.dmonitor.dao.YesswCaseInfoDao;
 import com.capinfo.dcxm.dmonitor.entity.YesswCaseInfo;
 import com.capinfo.dcxm.dmonitor.service.CaseCountService;
+import com.capinfo.dcxm.dmonitor.service.YerssService;
 import com.capinfo.dcxm.dmonitor.utils.CaseCount;
 import com.capinfo.dcxm.dmonitor.utils.Constant;
 import com.capinfo.dcxm.dmonitor.utils.ResultData;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +28,9 @@ public class YesswController {
     private YesswCaseInfoDao yesswCaseInfoDao;
     @Autowired
     private CaseCountService caseCountService;
+    @Autowired
+    private YerssService yerssService;
+    private final static Logger logger= LoggerFactory.getLogger(YesswController.class);
 
 
     /**
@@ -113,6 +119,20 @@ public class YesswController {
             result.setMsg("fail");
         }
         return result;
+    }
+
+
+    @RequestMapping(value = "replyCase")
+    public ResultData yesswCaseList(String recordNumber,String content,String operateType) {
+        logger.info("recordNumber is {},content is {},operateType is{}",recordNumber,content,operateType);
+        return yerssService.replyCase(recordNumber,content,operateType);
+//        System.out.println("steetName"+recordNumber);
+//        System.out.println("content"+content);
+//        System.out.println("operateType"+operateType);
+//        ResultData result = new ResultData();
+//        result.setFlag(true);
+//        result.setMsg("success");
+//        return result;
     }
 
 
