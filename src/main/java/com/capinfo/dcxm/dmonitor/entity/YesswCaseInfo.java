@@ -24,6 +24,13 @@ public class YesswCaseInfo {
     private String content;
     private String recordDeadtime;
 
+    //查询条件  案件时间起
+    private String yesswCreatetimeStart;
+    //查询条件  案件时间止
+    private String yesswCreatetimeEnd;
+
+
+
     @Id
     @Column(name = "id", nullable = false, length = 64)
     public String getId() {
@@ -162,6 +169,23 @@ public class YesswCaseInfo {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+
+    public String getYesswCreatetimeStart() {
+        return yesswCreatetimeStart;
+    }
+
+    public void setYesswCreatetimeStart(String yesswCreatetimeStart) {
+        this.yesswCreatetimeStart = yesswCreatetimeStart;
+    }
+
+    public String getYesswCreatetimeEnd() {
+        return yesswCreatetimeEnd;
+    }
+
+    public void setYesswCreatetimeEnd(String yesswCreatetimeEnd) {
+        this.yesswCreatetimeEnd = yesswCreatetimeEnd;
     }
 
     @Override

@@ -8,6 +8,7 @@ public class QueryParam {
 	private String beginCallTime;
 	private String endCallTime;
 	private List<String> orderUnitId;
+	private String orderId;
 	private Integer pageNo;
 	private Integer pageSize;
 	public String getBeginStartTime() {
@@ -52,7 +53,12 @@ public class QueryParam {
 	public void setPageSize(Integer pageSize) {
 		this.pageSize = pageSize;
 	}
-	
-	
 
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
 }

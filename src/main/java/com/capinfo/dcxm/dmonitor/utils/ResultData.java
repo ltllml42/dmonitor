@@ -11,6 +11,7 @@ public class ResultData implements Serializable {
 
     private Object data;
 
+
     public ResultData() {
     }
 

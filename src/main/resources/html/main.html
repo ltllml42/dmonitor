@@ -23,7 +23,7 @@
     <!--[if lte IE 9]>
     <link rel="stylesheet" href="/assets/css/ace-ie.css"/>
     <![endif]-->
-
+    <link rel="stylesheet" href="/assets/layer/theme/default/layer.css"/>
     <!-- inline styles related to this page -->
 
     <!-- ace settings handler -->
@@ -39,6 +39,7 @@
     <script src="/webjars/jquery/3.1.0/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/1.0.2/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/2.3.3/stomp.min.js"></script>
+    <script src="/assets/layer/layer.js"></script>
 
     <title>12345系统案件监控系统</title>
 </head>
@@ -56,11 +57,11 @@
                             <i class="ace-icon fa fa-file"></i>
                         </div>
                         <div class="infobox-data">
-                            <span class="infobox-data-number" id="yesswCount">32</span>
-                            <div class="infobox-content">12345剩余案件数</div>
+                            <span class="infobox-data-number" id="yesswCount"></span>
+                            <div class="infobox-content"><a href="javascript:void(0);" onclick="checkDetialList('1')" style=" text-decoration: none;">12345剩余案件数</a></div>
                         </div>
 
-                        <div class="stat stat-success"></div>
+                        <!--<div class="stat stat-success"></div>-->
                     </div>
 
                     <div class="infobox infobox-blue">
@@ -69,8 +70,8 @@
                         </div>
 
                         <div class="infobox-data">
-                            <span class="infobox-data-number">11</span>
-                            <div class="infobox-content">96010剩余案件数</div>
+                            <span class="infobox-data-number" id="recordCount"></span>
+                            <div class="infobox-content"><a href="javascript:void(0);" onclick="checkDetialList('2')" style=" text-decoration: none;">96010剩余案件数</a></div>
                         </div>
 
                         <!--<div class="badge badge-success">
@@ -85,8 +86,8 @@
                         </div>
 
                         <div class="infobox-data">
-                            <span class="infobox-data-number">8</span>
-                            <div class="infobox-content">城管系统案件数</div>
+                            <span class="infobox-data-number" id="cityCount"></span>
+                            <div class="infobox-content"><a href="javascript:void(0);" onclick="checkDetialList('3')" style=" text-decoration: none;">城管系统案件数</a></div>
                         </div>
                     </div>
 
@@ -95,8 +96,8 @@
                             <i class="ace-icon fa fa-flask"></i>
                         </div>
                         <div class="infobox-data">
-                            <span class="infobox-data-number">7</span>
-                            <div class="infobox-content">已结案数</div>
+                            <span class="infobox-data-number" id="finishCount"></span>
+                            <div class="infobox-content"><a href="javascript:void(0);" onclick="checkDetialList('4')" style=" text-decoration: none;">已结案数</a></div>
                         </div>
                     </div>
                 </div>
@@ -154,7 +155,7 @@
                                         </td>
                                         <td class="hidden-480" id="">
                                             <span class="label label-warning arrowed arrowed-right">
-                                                <a href="javascript:void(0)">1821044444</a>
+                                                <a href="javascript:void(0)" onclick="checkDetialList('5')"><span id="cityNoNumber"></span></a>
                                             </span>
                                         </td>
                                     </tr>
@@ -167,7 +168,7 @@
                                         </td>
                                         <td class="hidden-480">
                                         <span class="label label-danger arrowed">
-                                        <a href="javascript:void(0)">案件数3</a>
+                                        <a href="javascript:void(0)" onclick="checkDetialList('6')"><span id="deadtimeCount"></span></a>
                                         </span>
                                         </td>
                                     </tr>
@@ -274,6 +275,9 @@
     var i = 0;
 
     $(function () {
+
+        loadCount();
+
         var socket = new SockJS('/wsMonitor');
         stompClient= Stomp.over(socket);
         stompClient.connect({},function (frame) {
@@ -287,15 +291,75 @@
                 if (type == "1") {
                     //12345的案件数量
                     $("#yesswCount").text(count);
+                } else if (type == "2") {
+                    $("#recordCount").text(count);
+                } else if (type == "3") {
+                    $("#cityCount").text(count);
+                } else if (type == "4") {
+                    $("#finishCount").text(count);
+                } else if (type == "5") {
+                    $("#cityNoNumber").text(count);
+                } else if (type == "6") {
+                    $("#deadtimeCount").text(count);
                 }
-                //showContent(JSON.parse(result.body));
             });
         })
+
     });
     var showContent = function (data){
         //$("#iframe").contents().find("#notice").after("<li id='ranks"+i+"'>行号：" + i++ + "运行内容:" + data.content + "运行时间："+new Date(data.time).toLocaleString()+"</li>");
 
     }
+
+
+    function loadCount() {
+
+        $.ajax({
+            url:'/caseapi/sendInfo',
+            type:'post',
+            traditional: true,
+            success:function(data){
+                var list = data.data;
+                for(var i=0;i<list.length;i++) {
+                    var type = list[i].type;
+                    var count = list[i].count;
+                    if (type == "1") {
+                        //12345的案件数量
+                        $("#yesswCount").text(count);
+                    } else if (type == "2") {
+                        $("#recordCount").text(count);
+                    } else if (type == "3") {
+                        $("#cityCount").text(count);
+                    } else if (type == "4") {
+                        $("#finishCount").text(count);
+                    } else if (type == '5') {
+                        $("#cityNoNumber").text(count);
+                    } else if (type == '6') {
+                        $("#deadtimeCount").text(count);
+                    }
+
+                }
+
+
+            }
+        });
+
+    }
+
+
+    function checkDetialList(type) {
+        //弹框查看对应数量的数据
+        layer.open({
+            type: 2,
+            area: ["1100px", "600px"],
+            title:"<div align='center'>查看详情</div>",
+            fixed: false, //不固定
+            maxmin: false,
+            content: "/case/checkDetialList?type="+type
+        });
+
+    }
+
 
 
 </script>
