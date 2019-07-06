@@ -31,6 +31,7 @@ public class YesswCaseInfo {
 
 
 
+
     @Id
     @Column(name = "id", nullable = false, length = 64)
     public String getId() {
@@ -171,7 +172,7 @@ public class YesswCaseInfo {
         this.content = content;
     }
 
-
+    @Transient
     public String getYesswCreatetimeStart() {
         return yesswCreatetimeStart;
     }
@@ -179,7 +180,7 @@ public class YesswCaseInfo {
     public void setYesswCreatetimeStart(String yesswCreatetimeStart) {
         this.yesswCreatetimeStart = yesswCreatetimeStart;
     }
-
+    @Transient
     public String getYesswCreatetimeEnd() {
         return yesswCreatetimeEnd;
     }

@@ -52,4 +52,8 @@ public interface YesswCaseInfoDao extends JpaRepository<YesswCaseInfo, String>, 
     List<YesswCaseInfo> findByRecordDeadtimeBefore(String deadtimeQuery);
 
 
+    //void batchSave(Iterable<YesswCaseInfo> var1);
+
+
+
 }

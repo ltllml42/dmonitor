@@ -9,11 +9,11 @@ import java.util.List;
 
 
 public class YerSsWClient {
-	
+
 	private String delegateUUID;
 	private String agentID;
 	private String orderUnitID;
-	
+
 	public String getOrderUnitID() {
 		return orderUnitID;
 	}
@@ -32,14 +32,14 @@ public class YerSsWClient {
 	public void setAgentID(String agentID) {
 		this.agentID = agentID;
 	}
-	
+
 	/**
 	 * 查询最新工单
-	 * 
+	 *
 	 * A5DelegateInfo： WebService 代理类，以下同理。
-		maxCount ：最大获取数，当超过 100 时，只返回 100 个 TicketInfo 对象。
-		ignoreCount：忽略对象个数,如：参数（delegate，100,50），返回 51-150 记录的 Ticket。
-		备注：获取 A5ProcessInfo 对象前，需先获取 TicketInfo 内的 A5ProcessInfoID。
+	 maxCount ：最大获取数，当超过 100 时，只返回 100 个 TicketInfo 对象。
+	 ignoreCount：忽略对象个数,如：参数（delegate，100,50），返回 51-150 记录的 Ticket。
+	 备注：获取 A5ProcessInfo 对象前，需先获取 TicketInfo 内的 A5ProcessInfoID。
 	 * @return
 	 */
 	public List<TicketInfo> queryNewOrder(int maxCount, int ignoreCount){
@@ -49,8 +49,8 @@ public class YerSsWClient {
 		A5ServerSoapDelegate delegate=soapService.getA5ServerSoapPort();
 		return delegate.a5QueryNewOrder(a5Delegate, maxCount, ignoreCount);
 	}
-	
-		
+
+
 	public static void main(String[] args) {
 		YerSsWClient ysw = new YerSsWClient();
 		ysw.setAgentID("W101000");
@@ -61,14 +61,14 @@ public class YerSsWClient {
 			System.out.println(ticketInfo.getUserObjectsID());
 		}
 	}
-	
+
 	/**
 	 * 获取详情信息
-	 * 
+	 *
 	 * a5ProcessInfoID：根据 TicketInfo 内的 userObjectsID 的进行获取，
-		userObjectsID 的存储方式为对象类名与对象 ID 值用逗号进行分割。
-		返回值：A5OrderQueryResult(OrderInfo，A3DispatchInfo，A5ProcessInfo)。
-		备注：通过 a5ProcessInfoID 获取 A5ProcessInfo 详细信息。
+	 userObjectsID 的存储方式为对象类名与对象 ID 值用逗号进行分割。
+	 返回值：A5OrderQueryResult(OrderInfo，A3DispatchInfo，A5ProcessInfo)。
+	 备注：通过 a5ProcessInfoID 获取 A5ProcessInfo 详细信息。
 	 * @return
 	 */
 	public A5OrderQueryResult queryOrderDetail(String a5ProcessInfoID){
@@ -78,14 +78,14 @@ public class YerSsWClient {
 		return delegate.a5QueryOrder(a5Delegate,a5ProcessInfoID);
 	}
 
-	
+
 	/**
 	 * 签收工单
-	 * 
+	 *
 	 * 解释：A5ProcessInfo：主要提交数据为 A5ProcessInfo(ID,OrderUnitID)，返回 boolean
-			值。
-			更新字段：A5ProcessInfo（A5ProcessorState）。
-			备注：处理工单前，首先要进行签收工单，然后进入待处理的队列。
+	 值。
+	 更新字段：A5ProcessInfo（A5ProcessorState）。
+	 备注：处理工单前，首先要进行签收工单，然后进入待处理的队列。
 	 */
 	public boolean  signInOrder(String a5ProcessInfoID){
 		A5DelegateInfo a5Delegate=getA5DelegateInfo();
@@ -95,15 +95,15 @@ public class YerSsWClient {
 		info = getA5ProcessInfo(a5ProcessInfoID);
 		return delegate.a5SignOrder(a5Delegate,info);
 	}
-	
-	
+
+
 	/**
 	 *  退回工单
-	 * 
+	 *
 	 * 解释：A5ProcessInfo ：主要提交数据为 A5ProcessInfo(Reason,ID,
-		OrderUnitID)，返回 boolean 值.
-		更新字段：A5ProcessInfo（Reason，A5ProcessorState）。
-		备注：若工单不属于本分中心的业务范围内，可退回工单。
+	 OrderUnitID)，返回 boolean 值.
+	 更新字段：A5ProcessInfo（Reason，A5ProcessorState）。
+	 备注：若工单不属于本分中心的业务范围内，可退回工单。
 	 */
 	public boolean rejectOrder(A5ProcessInfo a5ProcessInfo){
 		A5DelegateInfo a5Delegate=getA5DelegateInfo();
@@ -124,11 +124,11 @@ public class YerSsWClient {
 	}
 	/**
 	 *  签收后退回工单
-	 * 
+	 *
 	 * 解释：A5ProcessInfo ：主要提交数据为 A5ProcessInfo(Reason,ID,
-		OrderUnitID)，返回 boolean 值.
-		更新字段：A5ProcessInfo（Reason，A5ProcessorState）。
-		备注：若工单不属于本分中心的业务范围内，可退回工单。
+	 OrderUnitID)，返回 boolean 值.
+	 更新字段：A5ProcessInfo（Reason，A5ProcessorState）。
+	 备注：若工单不属于本分中心的业务范围内，可退回工单。
 	 */
 	public boolean rejectSignOrder(A5ProcessInfo a5ProcessInfo){
 		A5DelegateInfo a5Delegate=getA5DelegateInfo();
@@ -147,12 +147,12 @@ public class YerSsWClient {
 		}
 		return false;
 	}
-	
+
 	/**
 	 *  推送工单
-	 * 
+	 *
 	 * 解释：A5ProcessInfo ：主要提交数据为 A5ProcessInfo(HandleResult,ID, OrderUnitID)，返回 boolean 值.
-		更新字段：A5ProcessInfo（HandleResult，A5ProcessorState）。
+	 更新字段：A5ProcessInfo（HandleResult，A5ProcessorState）。
 	 */
 	public boolean A5ReplyResult(A5ProcessInfo a5ProcessInfo){
 		A5DelegateInfo a5Delegate=getA5DelegateInfo();
@@ -173,7 +173,7 @@ public class YerSsWClient {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 申请延期
 	 * @param process
@@ -182,7 +182,7 @@ public class YerSsWClient {
 	public boolean a5RequestDelay(A5ProcessInfo process){
 		A5DelegateInfo a5Delegate=getA5DelegateInfo();
 		A5ProcessInfo info=getA5ProcessInfo(process.getID());
-		
+
 		A5ServerSoapService soapService=new A5ServerSoapService();
 		A5ServerSoapDelegate delegate=soapService.getA5ServerSoapPort();
 		try {
@@ -197,9 +197,9 @@ public class YerSsWClient {
 		}
 		return false;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * 获取通知详情
 	 */
@@ -211,7 +211,7 @@ public class YerSsWClient {
 		return notices;
 	}
 
-	
+
 	/**
 	 * 用于
 	 * @param a5Notice
@@ -221,27 +221,27 @@ public class YerSsWClient {
 		A5ServerSoapService soapService=new A5ServerSoapService();
 		A5ServerSoapDelegate delegate=soapService.getA5ServerSoapPort();
 		return delegate.a5AcceptNotice(a5Delegate, a5Notice);
-		
+
 	}
-	
-	
-	
+
+
+
 	private A5ProcessInfo getA5ProcessInfo(String id) {
 		A5ProcessInfo info=new A5ProcessInfo();
 		info.setID(id);
 		info.setOrderUnitID(orderUnitID);
 		return info;
 	}
-	
+
 	private A5DelegateInfo getA5DelegateInfo() {
 		A5DelegateInfo a5Delegate =new A5DelegateInfo();
 		a5Delegate.setDelegateUUID(delegateUUID);
 		a5Delegate.setAgentID(agentID);
 		return a5Delegate;
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 }
