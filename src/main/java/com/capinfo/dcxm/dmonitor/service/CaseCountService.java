@@ -2,10 +2,10 @@ package com.capinfo.dcxm.dmonitor.service;
 
 import com.alibaba.fastjson.JSON;
 import com.capinfo.dcxm.dmonitor.dao.CapBusiRecordDao;
+import com.capinfo.dcxm.dmonitor.dao.CapObtainRecordDao;
 import com.capinfo.dcxm.dmonitor.dao.YesswCaseInfoDao;
 import com.capinfo.dcxm.dmonitor.entity.*;
 import com.capinfo.dcxm.dmonitor.utils.*;
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,6 +32,8 @@ public class CaseCountService {
     private YesswCaseInfoDao yesswCaseInfoDao;
     @Autowired
     private CapBusiRecordDao capBusiRecordDao;
+    @Autowired
+    private CapObtainRecordDao capObtainRecordDao;
     @Autowired
     private SimpleMessageService simpleMessageService;
 
@@ -95,6 +97,14 @@ public class CaseCountService {
                 if ("check".equals(way)) {
                     count.setCaseList(deadtimeList);
                 }
+                break;
+            case Constant.TYPE_YESSW_EXCEPTION:
+                count.setType(Constant.TYPE_YESSW_EXCEPTION);
+                //需要当前时间2小时以后的
+                //0条数据为异常，不为0则正常
+                Date date = DateUtils.getBeforeHourse(new Date(), 2);
+                List<CapObtainRecord> yesswExceptionList = capObtainRecordDao.findByObtainTimeAfter(date);
+                count.setCount(yesswExceptionList.size()+"");
                 break;
         }
         return count;
@@ -282,6 +292,10 @@ public class CaseCountService {
         result.setData(deadtimeCount);
         simpleMessageService.sendTopicMessage("/topic/callback", JSON.toJSONString(result));
 
+        //12345接口异常（或者两个小时之内没有数据）
+        CaseCount yesswExceptionCount = getCount(Constant.TYPE_YESSW_EXCEPTION, null);
+        result.setData(yesswExceptionCount);
+        simpleMessageService.sendTopicMessage("/topic/callback", JSON.toJSONString(result));
     }
 
     /**

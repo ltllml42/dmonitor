@@ -36,5 +36,20 @@ public class DateUtils {
     }
 
 
+    /**
+     * 得到对应小时之前的时间
+     * @param hourse
+     * @return
+     */
+    public static Date getBeforeHourse(Date date, int hourse) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.HOUR, -hourse);
+        Date d = c.getTime();
+        return d;
+    }
+
+
+
 
 }
