@@ -1,8 +1,8 @@
 package com.capinfo.dcxm.dmonitor.client;
 
+import com.capinfo.dcxm.dmonitor.utils.BeanUtils;
 import com.capinfo.dcxm.dmonitor.utils.JsonUtil;
 import com.capinfo.dcxm.dmonitor.yerss.*;
-import org.springframework.beans.BeanUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -105,7 +105,7 @@ public class YerSsWClient {
 		更新字段：A5ProcessInfo（Reason，A5ProcessorState）。
 		备注：若工单不属于本分中心的业务范围内，可退回工单。
 	 */
-	/*public boolean rejectOrder(A5ProcessInfo a5ProcessInfo){
+	public boolean rejectOrder(A5ProcessInfo a5ProcessInfo){
 		A5DelegateInfo a5Delegate=getA5DelegateInfo();
 		A5ServerSoapService soapService=new A5ServerSoapService();
 		A5ServerSoapDelegate delegate=soapService.getA5ServerSoapPort();
@@ -121,7 +121,7 @@ public class YerSsWClient {
 			e.printStackTrace();
 		}
 		return false;
-	}*/
+	}
 	/**
 	 *  签收后退回工单
 	 * 
@@ -130,13 +130,13 @@ public class YerSsWClient {
 		更新字段：A5ProcessInfo（Reason，A5ProcessorState）。
 		备注：若工单不属于本分中心的业务范围内，可退回工单。
 	 */
-	/*public boolean rejectSignOrder(A5ProcessInfo a5ProcessInfo){
+	public boolean rejectSignOrder(A5ProcessInfo a5ProcessInfo){
 		A5DelegateInfo a5Delegate=getA5DelegateInfo();
 		A5ServerSoapService soapService=new A5ServerSoapService();
 		A5ServerSoapDelegate delegate=soapService.getA5ServerSoapPort();
 		A5ProcessInfo info=getA5ProcessInfo(a5ProcessInfo.getID());
 		try {
-			com.compass.framework.common.utils.BeanUtils.copyNotNullProperties(info, a5ProcessInfo);
+			BeanUtils.copyNotNullProperties(info, a5ProcessInfo);
 			return delegate.a5RejectSignOrder(a5Delegate,info);
 		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
@@ -146,7 +146,7 @@ public class YerSsWClient {
 			e.printStackTrace();
 		}
 		return false;
-	}*/
+	}
 	
 	/**
 	 *  推送工单
@@ -154,13 +154,13 @@ public class YerSsWClient {
 	 * 解释：A5ProcessInfo ：主要提交数据为 A5ProcessInfo(HandleResult,ID, OrderUnitID)，返回 boolean 值.
 		更新字段：A5ProcessInfo（HandleResult，A5ProcessorState）。
 	 */
-	/*public boolean A5ReplyResult(A5ProcessInfo a5ProcessInfo){
+	public boolean A5ReplyResult(A5ProcessInfo a5ProcessInfo){
 		A5DelegateInfo a5Delegate=getA5DelegateInfo();
 		A5ProcessInfo info=getA5ProcessInfo(a5ProcessInfo.getID());
 		A5ServerSoapService soapService=new A5ServerSoapService();
 		A5ServerSoapDelegate delegate=soapService.getA5ServerSoapPort();
 		try {
-			com.compass.framework.common.utils.BeanUtils.copyNotNullProperties(info, a5ProcessInfo);
+			BeanUtils.copyNotNullProperties(info, a5ProcessInfo);
 			System.out.println("a5Delegate"+ JsonUtil.objectToJsonStr(a5Delegate));
 			System.out.println("info"+JsonUtil.objectToJsonStr(info));
 			return delegate.a5ReplyResult(a5Delegate,info);
@@ -172,21 +172,21 @@ public class YerSsWClient {
 			e.printStackTrace();
 		}
 		return false;
-	}*/
+	}
 	
 	/**
 	 * 申请延期
 	 * @param process
 	 * @return
 	 */
-	/*public boolean a5RequestDelay(A5ProcessInfo process){
+	public boolean a5RequestDelay(A5ProcessInfo process){
 		A5DelegateInfo a5Delegate=getA5DelegateInfo();
 		A5ProcessInfo info=getA5ProcessInfo(process.getID());
 		
 		A5ServerSoapService soapService=new A5ServerSoapService();
 		A5ServerSoapDelegate delegate=soapService.getA5ServerSoapPort();
 		try {
-			com.compass.framework.common.utils.BeanUtils.copyNotNullProperties(info, process);
+			BeanUtils.copyNotNullProperties(info, process);
 			return delegate.a5RequestDelay(a5Delegate, info);
 		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
@@ -196,7 +196,7 @@ public class YerSsWClient {
 			e.printStackTrace();
 		}
 		return false;
-	}*/
+	}
 	
 	
 	
