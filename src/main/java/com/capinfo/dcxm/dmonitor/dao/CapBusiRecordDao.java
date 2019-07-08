@@ -11,6 +11,7 @@ import java.util.List;
 public interface CapBusiRecordDao extends JpaRepository<CapBusiRecord, String> {
 
     List<CapBusiRecord> findByYesswOrderId(String yesswOrderId);
+    List<CapBusiRecord> findByRecordNumber(String recordNumber);
 
     List<CapBusiRecord> findByYesswOrderIdIn(List<String> yesswOrderIds);
 
