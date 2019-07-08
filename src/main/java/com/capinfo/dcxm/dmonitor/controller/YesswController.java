@@ -95,6 +95,12 @@ public class YesswController {
         //12345接口异常（或者两个小时之内没有数据）
         CaseCount yesswExceptionCount = caseCountService.getCount(Constant.TYPE_YESSW_EXCEPTION, null);
         caseCountList.add(yesswExceptionCount);
+        //12345已经结案，未发通知
+        CaseCount noticeCount = caseCountService.getCount(Constant.TYPE_YESSWFINISH_NOTICE, null);
+        caseCountList.add(noticeCount);
+        //12345退回接口异常（回退失败）（城管推送12345接口）
+        CaseCount yesswhuituiCount = caseCountService.getCount(Constant.TYPE_YESSWHUITUI_EXCEPTION, null);
+        caseCountList.add(yesswhuituiCount);
 
         result.setFlag(true);
         result.setMsg("success");
@@ -136,6 +142,18 @@ public class YesswController {
 //        result.setFlag(true);
 //        result.setMsg("success");
 //        return result;
+    }
+
+
+    @RequestMapping(value = "getCaseByStreet")
+    public ResultData getCaseByStreet(HttpServletRequest request) {
+
+        String[] duallists = request.getParameterValues("duallist");
+
+        ResultData result = new ResultData();
+        result.setFlag(true);
+        result.setMsg("success");
+        return result;
     }
 
 

@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "CAP_NOTICE_YERSSW", schema = "HOLLYCC", catalog = "")
+@Table(name = "CAP_NOTICE_YERSSW")
 public class CapNoticeYerssw {
     private String capNoticeId;
     private String a5NoticeInfoTypeId;

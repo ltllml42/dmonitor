@@ -179,11 +179,8 @@
                                                 <b class="red">高</b>
                                             </small>
                                         </td>
-
                                         <td class="hidden-480">
-                                                <span class="label">
-                                                    <s>out of stock</s>
-                                                </span>
+                                            <a href="javascript:void(0)" onclick="checkDetialList('9')"><span class="label" id="yesswhuituiCount"></span></a>
                                         </td>
                                     </tr>
                                     <tr>
@@ -194,7 +191,7 @@
                                         </td>
 
                                         <td class="hidden-480">
-                                            <span class="label label-warning arrowed arrowed-right">SOLD</span>
+                                            <a href="javascript:void(0)" onclick="checkDetialList('8')"><span class="label label-warning arrowed arrowed-right" id="noticeCount"></span></a>
                                         </td>
                                     </tr>
                                     <tr>
@@ -310,6 +307,10 @@
                         $("#yesswNormal").show();
                         $("#yesswFail").hide();
                     }
+                } else if (type == "8") {
+                    $("#noticeCount").text(count);
+                } else if (type == "9") {
+                    $("#yesswhuituiCount").text(count);
                 }
             });
         })
@@ -354,6 +355,10 @@
                             $("#yesswNormal").show();
                             $("#yesswFail").hide();
                         }
+                    } else if (type == "8") {
+                        $("#noticeCount").text(count);
+                    } else if (type == "9") {
+                        $("#yesswhuituiCount").text(count);
                     }
 
                 }

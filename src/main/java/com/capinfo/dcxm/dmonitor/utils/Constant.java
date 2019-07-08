@@ -34,9 +34,17 @@ public class Constant {
      */
     public static final String TYPE_DEADTIME = "6";
     /**
-     * 12345接口异常（或者两个小时之内没有数据）
+     * 12345接口异常（或者两个小时之内没有数据）  7
      */
     public static final String TYPE_YESSW_EXCEPTION = "7";
+    /**
+     * 12345已经结案，未发通知   8
+     */
+    public static final String TYPE_YESSWFINISH_NOTICE = "8";
+    /**
+     * 12345退回接口异常（回退失败）（城管推送12345接口）   9
+     */
+    public static final String TYPE_YESSWHUITUI_EXCEPTION = "9";
 
 
     /**

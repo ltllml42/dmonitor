@@ -3,6 +3,7 @@ package com.capinfo.dcxm.dmonitor.service;
 import com.alibaba.fastjson.JSON;
 import com.capinfo.dcxm.dmonitor.dao.CapBusiRecordDao;
 import com.capinfo.dcxm.dmonitor.dao.CapObtainRecordDao;
+import com.capinfo.dcxm.dmonitor.dao.QueryDaoImpl;
 import com.capinfo.dcxm.dmonitor.dao.YesswCaseInfoDao;
 import com.capinfo.dcxm.dmonitor.entity.*;
 import com.capinfo.dcxm.dmonitor.utils.*;
@@ -16,6 +17,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -24,6 +28,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
 
 @Service
 public class CaseCountService {
@@ -34,6 +39,8 @@ public class CaseCountService {
     private CapBusiRecordDao capBusiRecordDao;
     @Autowired
     private CapObtainRecordDao capObtainRecordDao;
+    @Autowired
+    private QueryDaoImpl queryDaoImpl;
     @Autowired
     private SimpleMessageService simpleMessageService;
 
@@ -106,6 +113,23 @@ public class CaseCountService {
                 List<CapObtainRecord> yesswExceptionList = capObtainRecordDao.findByObtainTimeAfter(date);
                 count.setCount(yesswExceptionList.size()+"");
                 break;
+            case Constant.TYPE_YESSWFINISH_NOTICE:
+                //12345已经结案，未发通知
+                count.setType(Constant.TYPE_YESSWFINISH_NOTICE);
+                List<YesswCaseInfo> noticeList = queryDaoImpl.executeNoticeQuery(QueryDaoImpl.noticeQueryStr);
+                count.setCount(noticeList.size()+"");
+                if ("check".equals(way)) {
+                    count.setCaseList(noticeList);
+                }
+                break;
+            case Constant.TYPE_YESSWHUITUI_EXCEPTION:
+                count.setType(Constant.TYPE_YESSWHUITUI_EXCEPTION);
+                List<YesswCaseInfo> yesswhuituiList = queryDaoImpl.executeHuituiExceptionQuery(QueryDaoImpl.yesswHtuituiExceptionQueryStr);
+                count.setCount(yesswhuituiList.size()+"");
+                if ("check".equals(way)) {
+                    count.setCaseList(yesswhuituiList);
+                }
+                break;
         }
         return count;
     }
@@ -119,6 +143,7 @@ public class CaseCountService {
      */
     public void saveYesswCase(String starttime, String endtime, String caseNum) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdftime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date nowDate = new Date();
         String beginStarttime = sdf.format(DateUtils.getBeforeDate(nowDate, 30)) + " 00:00:00";
         String endStarttime = sdf.format(nowDate) + " 20:00:00";
@@ -131,7 +156,8 @@ public class CaseCountService {
         QueryParam queryParam=new QueryParam();
         queryParam.setBeginStartTime(beginStarttime);
         queryParam.setEndStartTime(endStarttime);
-
+        String beginCalltime = StringUtils.isBlank(starttime)?sdf.format(nowDate)+ " 08:00:00":starttime;
+        String endCalltime = StringUtils.isBlank(endtime)?sdf.format(nowDate)+ " 23:00:00":endtime;
         if (StringUtils.isNotBlank(caseNum)) {
             queryParam.setOrderId(caseNum);
             if (StringUtils.isNotBlank(starttime)) {
@@ -141,8 +167,7 @@ public class CaseCountService {
                 queryParam.setEndCallTime(endtime);
             }
         } else {
-            String beginCalltime = StringUtils.isBlank(starttime)?sdf.format(nowDate)+ " 08:00:00":starttime;
-            String endCalltime = StringUtils.isBlank(endtime)?sdf.format(nowDate)+ " 23:00:00":endtime;
+
             queryParam.setBeginCallTime(beginCalltime);
             queryParam.setEndCallTime(endCalltime);
         }
@@ -169,6 +194,7 @@ public class CaseCountService {
                 startPage++;
             }
             List<YesswCaseInfo> caseList = yesswCaseInfoDao.findByYesswStatusNot(Constant.YESSW_STATUS_FINISH);
+            //List<YesswCaseInfo> caseList = yesswCaseInfoDao.findByYesswStatusNotAndYesswCreatetimeAfterAndYesswCreatetimeBefore(Constant.YESSW_STATUS_FINISH, beginCalltime, endCalltime);
 
             //这里需要in出来工单表里infoList中的12345工单号包含的数据
             List<String> yesswOrderIdList = new ArrayList<String>();
@@ -187,6 +213,7 @@ public class CaseCountService {
                         //说明在表里已经存在抓取的数据了
                         flag = true;
                         yesswCaseInfo.setId(caseInfo.getId());
+                        yesswCaseInfo.setCreateTime(StringUtils.isBlank(caseInfo.getCreateTime())?sdftime.format(new Date()):caseInfo.getCreateTime());
                         break;
                     }
                 }
@@ -197,6 +224,7 @@ public class CaseCountService {
                     //如果是没结案的才往数据库里插
                     if (!Constant.YESSW_STATUS_FINISH.equals(yesswCaseInfo.getYesswStatus())) {
                         yesswCaseInfo.setId(UUID.randomUUID().toString().replaceAll("-",""));
+                        yesswCaseInfo.setCreateTime(sdftime.format(new Date()));
                         batchList.add(yesswCaseInfo);
                     }
 
@@ -218,12 +246,17 @@ public class CaseCountService {
         info.setYesswCreatetime(bean.getStartTime());
         info.setYesswStatus(bean.getHandleName());
         info.setYesswSendarea(bean.getDistrictName());
-        if (bean.getContent().length()>2000) {
+        /*if (bean.getContent().length()>2000) {
             info.setContent(bean.getContent().substring(0,2000));
         } else {
             info.setContent(bean.getContent());
+        }*/
+        int length = bean.getContent().length();
+        if (length > 800) {
+            info.setContent(bean.getContent().substring(0,800));
+        } else {
+            info.setContent(bean.getContent());
         }
-
         return info;
     }
 
@@ -234,7 +267,7 @@ public class CaseCountService {
 
         for (YesswCaseInfo yesswCaseInfo : yesswCaseInfoList) {
             for (CapBusiRecord capBusiRecord : recordList) {
-                yesswCaseInfo.setCreateTime(sdf.format(new Date()));
+                //yesswCaseInfo.setCreateTime(sdf.format(new Date()));
                 if (yesswCaseInfo.getYesswNumber().equals(capBusiRecord.getYesswOrderId()) && yesswCaseInfo.getYesswCreatetime().equals(capBusiRecord.getYessStartTime())) {
                     yesswCaseInfo.setRecordNumber(capBusiRecord.getRecordNumber());
                     yesswCaseInfo.setRecordCreatetime(sdf.format(capBusiRecord.getGatheringTime()));
@@ -259,7 +292,7 @@ public class CaseCountService {
     /**
      * websocket发送信息
      */
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 20000)
     public void getInfo() {
 
         //统计12345未结案的案件
@@ -296,6 +329,15 @@ public class CaseCountService {
         CaseCount yesswExceptionCount = getCount(Constant.TYPE_YESSW_EXCEPTION, null);
         result.setData(yesswExceptionCount);
         simpleMessageService.sendTopicMessage("/topic/callback", JSON.toJSONString(result));
+        //12345已经结案，未发通知
+        CaseCount noticeCount = getCount(Constant.TYPE_YESSWFINISH_NOTICE, null);
+        result.setData(noticeCount);
+        simpleMessageService.sendTopicMessage("/topic/callback", JSON.toJSONString(result));
+        //12345退回接口异常（回退失败）（城管推送12345接口）
+        CaseCount yesswhuituiCount = getCount(Constant.TYPE_YESSWHUITUI_EXCEPTION, null);
+        result.setData(yesswhuituiCount);
+        simpleMessageService.sendTopicMessage("/topic/callback", JSON.toJSONString(result));
+
     }
 
     /**
@@ -304,7 +346,7 @@ public class CaseCountService {
      * @return
      */
     public Page<YesswCaseInfo> findPageQuery(int currentPage, YesswCaseInfo yesswCaseInfo) {
-        Sort sort = new Sort(Sort.Direction.DESC,"createTime"); //创建时间降序排序
+        Sort sort = new Sort(Sort.Direction.DESC,"recordCreatetime"); //创建时间降序排序
         Pageable pageable = new PageRequest(currentPage, Constant.PAGECOUNT, sort);
         Specification<YesswCaseInfo> specification = new Specification<YesswCaseInfo>(){
 
@@ -327,11 +369,16 @@ public class CaseCountService {
                     Predicate p4 = cb.equal(root.get("recordNumber").as(String.class), yesswCaseInfo.getRecordNumber());
                     list.add(p4);
                 }
+                if (list.size() == 0) {
+                    return null;
+                }
                 return cb.and(list.toArray(new Predicate[0]));
             }
         };
         return yesswCaseInfoDao.findAll(specification, pageable);
     }
+
+
 
 
 

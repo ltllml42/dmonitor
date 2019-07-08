@@ -59,30 +59,30 @@
                     <div class="col-xs-12">
                         这个功能主要用于人工确认12345系统接口是否存在问题。
                         <!-- PAGE CONTENT BEGINS -->
-                        <form class="form-horizontal" role="form">
+                        <form class="form-horizontal" role="form" id="inputForm">
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-top" for="duallist">检查接口及账户状态：</label>
                                 <div class="col-sm-8">
                                     <select multiple="multiple" size="10" name="duallistbox_demo1[]" id="duallist">
                                         <option value="option1">东华门街道</option>
-                                        <option value="option1">景山街道</option>
-                                        <option value="option1">交道口街道</option>
-                                        <option value="option1">安定门街道</option>
-                                        <option value="option1">北新桥街道</option>
-                                        <option value="option1">东四街道</option>
-                                        <option value="option1">朝阳门街道</option>
-                                        <option value="option1">建国门街道</option>
-                                        <option value="option1">东直门街道</option>
-                                        <option value="option1">和平里街道</option>
-                                        <option value="option1">前门街道</option>
-                                        <option value="option1">崇文门外街道</option>
-                                        <option value="option1">东花市街道</option>
-                                        <option value="option1">龙潭街道</option>
-                                        <option value="option1">体育馆路街道</option>
-                                        <option value="option1">天坛街道</option>
-                                        <option value="option1">永定门外街道</option>
+                                        <option value="option2">景山街道</option>
+                                        <option value="option3">交道口街道</option>
+                                        <option value="option4">安定门街道</option>
+                                        <option value="option5">北新桥街道</option>
+                                        <option value="option6">东四街道</option>
+                                        <option value="option7">朝阳门街道</option>
+                                        <option value="option8">建国门街道</option>
+                                        <option value="option9">东直门街道</option>
+                                        <option value="option10">和平里街道</option>
+                                        <option value="option11">前门街道</option>
+                                        <option value="option12">崇文门外街道</option>
+                                        <option value="option13">东花市街道</option>
+                                        <option value="option14">龙潭街道</option>
+                                        <option value="option15">体育馆路街道</option>
+                                        <option value="option16">天坛街道</option>
+                                        <option value="option17">永定门外街道</option>
                                     </select>
-                                    <div class="hr hr-16 hr-dotted"></div>
+                                    <div class="hr hr-16 hr-dotted" id="duallist2"></div>
                                 </div>
                             </div>
                             <div class="clearfix form-actions">
@@ -533,7 +533,7 @@
             //$('#form-field-tags').autosize({append: "\n"});
         }
 
-        $("#accessCasesCount").click(function(){
+        /*$("#accessCasesCount").click(function(){
             $.confirm({
                 title: '查看抓取详情',
                 content: 'url:InterfaceCount.html',
@@ -552,7 +552,23 @@
                     }
                 }
             });
+        });*/
+        $("#accessCasesCount").click(function () {
+
+            var duallist = $("#duallist").val();
+            $.ajax({
+                url:'/caseapi/getCaseByStreet',
+                data:{duallist:duallist},
+                type:'post',
+                traditional: true,
+                success:function(data){
+
+                }
+            });
         });
+
+
+
         /////////
         $('#modal-form input[type=file]').ace_file_input({
             style:'well',

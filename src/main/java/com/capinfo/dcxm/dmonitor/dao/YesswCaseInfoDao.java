@@ -36,6 +36,9 @@ public interface YesswCaseInfoDao extends JpaRepository<YesswCaseInfo, String>, 
      */
     List<YesswCaseInfo> findByYesswStatusNot(String yesswStatus);
 
+    List<YesswCaseInfo> findByYesswStatusNotAndYesswCreatetimeAfterAndYesswCreatetimeBefore(String yesswStatus, String yesswCreatetimeAfter, String yesswCreatetimeBefore);
+
+
     /**
      * 推送城管系统后未能获取到城管案件编号   96010案件状态   案件任务状态
      * @param recordStatus
