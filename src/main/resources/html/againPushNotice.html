@@ -41,7 +41,55 @@
 </head>
 <body>
 
+<div class="main-container" id="main-container">
+    <!-- /section:basics/sidebar -->
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="page-content">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <form class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="a5Type">
+                                    类型：
+                                </label>
+                               <div class="col-xs-12 col-sm-9">
+                                    <select id="a5Type" name="a5Type">
+                                        <option value="NA5-1">结案通过通知</option>
+                                        <option value="NA5-2">结案不通过通知</option>
+                                        <option value="NA5-3">同意回退通知</option>
+                                        <option value="NA5-4">不同意回退通知</option>
+                                        <option value="NA5-5">同意延期通知</option>
+                                        <option value="NA5-6">不同意延期通知</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="a5Type">
+                                   案件编号：
+                                </label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <input id="recordNumber" placeholder="请输入案件编号"/>
+                                </div>
+                            </div>
 
+
+
+                            <div class="clearfix form-actions">
+                                <div class="col-md-offset-3 col-md-9">
+                                    <button  class="btn btn-info" onclick="replyNotice();"  type="button">
+                                        <i class="ace-icon fa fa-check bigger-110"></i>
+                                        确认推送通知（需要做一次确认工作。）
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.page-content -->
+        </div>
+    </div><!-- /.main-content -->
 <!-- basic scripts -->
 
 <!--[if !IE]> -->
@@ -111,5 +159,28 @@
     }
     #sidebar-collapse{color:red;}
 </style>
+    <script>
+        function replyNotice() {
+            $.ajax({
+                url:'/caseapi/againPushNotice',
+                type:'post',
+                data:{recordNumber:$("#recordNumber").val(),a5Type:$("#a5Type").val()},
+                traditional: true,
+                success:function(data){
+                    console.log(data);
+                    if(data.flag){
+                        alert(data.msg)
+                    }else{
+                        alert(data.msg)
+                    }
+                },
+                fail:function (data) {
+                    alert("操作失败");
+                }
+            });
+        }
+
+
+    </script>
 </body>
 </html>

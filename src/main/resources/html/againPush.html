@@ -34,10 +34,91 @@
     <script src="../assets/js/html5shiv.js"></script>
     <script src="../assets/js/respond.js"></script>
     <![endif]-->
-    <title>退回案件</title>
+    <title>重新推送</title>
 </head>
 <body>
+<div class="main-container" id="main-container">
+    <!-- /section:basics/sidebar -->
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="page-content">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <form class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="recordNumber">
+                                    案件编号：
+                                </label>
+                                <!--<div class="col-xs-12 col-sm-9">
+                                    <select id="chine" name="chine">
+                                        <option value="0">东城区</option>
+                                        <option value="109">东城区和平里街道</option>
+                                        <option value="114">东城区前门街道</option>
+                                        <option value="108">东城区东直门街道</option>
+                                        <option value="104">东城区崇文门外街道</option>
+                                        <option value="101">东城区安定门街道</option>
+                                        <option value="105">东城区东花市街道</option>
+                                        <option value="102">东城区北新桥街道</option>
+                                        <option value="113">东城区龙潭街道</option>
+                                        <option value="111">东城区交道口街道</option>
+                                        <option value="115">东城区体育馆路街道</option>
+                                        <option value="103">东城区朝阳门街道</option>
+                                        <option value="116">东城区天坛街道</option>
+                                        <option value="107">东城区东四街道</option>
+                                        <option value="117">东城区永定门外街道</option>
+                                        <option value="112">东城区景山街道</option>
+                                        <option value="110">东城区建国门街道</option>
+                                        <option value="106">东城区东华门街道</option>
+                                    </select>
+                                </div>-->
+                                <div class="col-xs-12 col-sm-9">
+                                    <input id="recordNumber" placeholder="请输入案件编号"/>
+                                </div>
+                            </div>
+                            <!--<div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="form-field-8">
+                                    回退标记（系统自动分发）
+                                </label>
+                                <div class="col-sm-9">
+                                    &lt;!&ndash;  名字 回退 &ndash;&gt;
+                                    <select class="" name="formField">
+                                        <option value="回退">回退</option>
+                                    </select>
+                                </div>
+                            </div>
+-->
+                            <!--<div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="operateType">
+                                    操作类型
+                                </label>
+                                <div class="col-sm-9">
+                                    &lt;!&ndash;  名字 回退 &ndash;&gt;
+                                    <select class=""id="operateType" name="operateType">
+                                        <option value="0">签收后回退</option>
+                                        <option value="1">签收前回退</option>
+                                        <option value="2">结案</option>
+                                    </select>
+                                </div>
+                            </div>-->
 
+
+
+
+                            <div class="clearfix form-actions">
+                                <div class="col-md-offset-3 col-md-9">
+                                    <button  class="btn btn-info" onclick="replyCase();"  type="button">
+                                        <i class="ace-icon fa fa-check bigger-110"></i>
+                                        确认推送案件（需要做一次确认工作。）
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.page-content -->
+        </div>
+    </div><!-- /.main-content -->
 <!-- basic scripts -->
 
 <!--[if !IE]> -->
@@ -107,6 +188,29 @@
     }
     #sidebar-collapse{color:red;}
 </style>
+    <script>
+        function replyCase() {
+            $.ajax({
+                url:'/caseapi/againPush',
+                type:'post',
+                data:{recordNumber:$("#recordNumber").val()},
+                traditional: true,
+                success:function(data){
+                    console.log(data);
+                    if(data.flag){
+                        alert(data.msg)
+                    }else{
+                        alert(data.msg)
+                    }
+                },
+                fail:function (data) {
+                    alert("操作失败");
+                }
+            });
+        }
+
+
+    </script>
 
 </body>
 </html>

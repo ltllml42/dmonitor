@@ -1,10 +1,14 @@
 package com.capinfo.dcxm.dmonitor.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.capinfo.dcxm.dmonitor.client.YerSsWClient;
 import com.capinfo.dcxm.dmonitor.dao.CapBusiRecordDao;
+import com.capinfo.dcxm.dmonitor.dao.CapNoticeYersswDao;
 import com.capinfo.dcxm.dmonitor.entity.CapBusiRecord;
+import com.capinfo.dcxm.dmonitor.entity.CapNoticeYerssw;
 import com.capinfo.dcxm.dmonitor.enums.StreeAccountEnum;
 import com.capinfo.dcxm.dmonitor.factory.YerssClientFactory;
+import com.capinfo.dcxm.dmonitor.utils.HttpUtils;
 import com.capinfo.dcxm.dmonitor.utils.ResultData;
 import com.capinfo.dcxm.dmonitor.yerss.A5ProcessInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +18,12 @@ import java.util.List;
 
 @Service
 public class YerssService {
+    public final static String PUSH_RECORD_URL="http://localhost:8618/dcxm/Compass/workflow/yerss/testPush";
+    public final static String PUSH_NORICW_URL="http://localhost:8618/dcxm/Compass/workflow/yerss/testPushNotice";
     @Autowired
     private CapBusiRecordDao capBusiRecordDao;
+    @Autowired
+    private CapNoticeYersswDao capNoticeYersswDao;
     public ResultData replyCase(String recordNumber, String content, String operateType) {
         List<CapBusiRecord> list = capBusiRecordDao.findByRecordNumber(recordNumber);
         if(list==null||list.size()<=0){
@@ -80,5 +88,41 @@ public class YerssService {
         a5ProcessInfo.setReason(content);
         boolean flag = client.rejectSignOrder(a5ProcessInfo);
         return flag;
+    }
+
+    public ResultData againPush(String recordNumber) {
+        List<CapBusiRecord> list = capBusiRecordDao.findByRecordNumber(recordNumber);
+        if(list==null||list.size()<=0){
+            return ResultData.error("此案件号存在问题,请检查后再试");
+        }
+        CapBusiRecord capBusiRecord=list.get(0);
+        String result = HttpUtils.doGet(PUSH_RECORD_URL+"?id="+capBusiRecord.getRecordId());
+        JSONObject jsonObject=JSONObject.parseObject(result);
+        String success=jsonObject.get("success").toString();
+        if("true".equals(success)){
+            return ResultData.sucess("操作成功");
+        }else{
+            return ResultData.sucess("操作成功");
+        }
+    }
+
+    public ResultData againPushNotice(String recordNumber,String a5Type) {
+        List<CapBusiRecord> list = capBusiRecordDao.findByRecordNumber(recordNumber);
+        if(list==null||list.size()<=0){
+            return ResultData.error("此案件号存在问题,请检查后再试");
+        }
+        CapBusiRecord capBusiRecord=list.get(0);
+        List<CapNoticeYerssw> noticeList = capNoticeYersswDao.findByRecordIdAndA5NoticeInfoTypeId(capBusiRecord.getRecordId(), a5Type);
+        if(noticeList==null||noticeList.size()<=0){
+            return ResultData.error("此案件号通知存在问题,请检查");
+        }
+        String result = HttpUtils.doGet(PUSH_NORICW_URL+"?id="+capBusiRecord.getRecordId());
+        JSONObject jsonObject=JSONObject.parseObject(result);
+        String success=jsonObject.get("success").toString();
+        if("true".equals(success)){
+            return ResultData.sucess("操作成功");
+        }else{
+            return ResultData.sucess("操作成功");
+        }
     }
 }
