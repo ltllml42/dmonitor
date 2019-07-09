@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!--抓取详情-->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <!-- bootstrap & fontawesome -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.css" />
+    <link rel="stylesheet" href="/assets/css/font-awesome.css" />
+    <link rel="stylesheet" href="/assets/css/jquery-confirm.css" />
+    <!-- page specific plugin styles -->
+    <!-- text fonts -->
+    <link rel="stylesheet" href="/assets/css/ace-fonts.css" />
+
+    <!-- ace styles -->
+    <link rel="stylesheet" href="/assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style" />
+    <link rel="stylesheet" href="/assets/css/bootstrap-datepicker3.min.css" />
+    <link rel="stylesheet" href="/assets/css/bootstrap-datetimepicker.min.css" />
+
+
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="/assets/css/ace-part2.css" class="ace-main-stylesheet" />
+    <![endif]-->
+
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="/assets/css/ace-ie.css" />
+    <![endif]-->
+
+    <!-- inline styles related to this page -->
+
+    <!-- ace settings handler -->
+    <script src="/assets/js/ace-extra.js"></script>
+
+    <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+
+    <!--[if lte IE 8]>
+    <script src="/assets/js/html5shiv.js"></script>
+    <script src="/assets/js/respond.js"></script>
+    <![endif]-->
+    <title></title>
+
+    <script>
+
+
+
+        /*$(function(){
+
+            var urlinfo=window.location.href;
+            var len=urlinfo.length;//获取url的长度
+            var offset=urlinfo.indexOf("?");//设置参数字符串开始的位置
+            var newsidinfo=urlinfo.substr(offset,len)//取出参数字符串 这里会获得类似“id=1”这样的字符串
+            var newsids=newsidinfo.split("=");//对获得的参数字符串按照“=”进行分割
+            var newsid=newsids[1];//得到参数值
+            var newsname=newsids[0];
+            var id=newsid;
+            detail(id);
+        });*/
+
+        /*function detail(id) {
+
+            $.ajax({
+                url:'/caseapi/getDetial',
+                data:{id:id},
+                type:'post',
+                traditional: true,
+                success:function(data){
+                    $("#yesswNumber").text(data.yesswNumber);
+                }
+            })
+
+        }*/
+
+
+
+    </script>
+
+</head>
+<body  style="overflow-x: hidden; height: 600px">
+
+<div class="main-content">
+    <div class="main-content-inner">
+        <div class="page-content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <!-- PAGE CONTENT BEGINS -->
+                    <div class="row">
+
+                        <!--<div class="col-xs-12">
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <form class="form-inline">
+                                        <label class="inline">
+                                            案件立案查询开始时间: 带过来即可
+                                        </label>
+                                        <label class="inline">
+                                            案件立案查询结束时间: 带过来即可
+                                        </label>
+                                        <label class="inline">
+                                            抓取时间：带过来即可
+                                        </label>
+                                        <label class="inline">
+                                            总共抓取多少案件
+                                        </label>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>-->
+                        <div>
+                            <label class="inline">
+                                共计<span th:text="${count}"></span>条案件
+                            </label>
+                        </div>
+
+                        <div class="col-xs-12">
+                            <table id="simple-table" class="table  table-bordered table-hover">
+                                <thead>
+
+                                <!--<tr>
+                                    <th colspan="4"  class="center">12345系统</th>
+                                    <th colspan="3" class="center">96010系统接收到的案件（接口）</th>
+                                    <th colspan="2" class="center">城管系统</th>
+                                </tr>-->
+                                <tr>
+                                    <!--<th><a href="javascript:void(0);" alt="案件信息的前150个汉字......">工单号</a></th>-->
+                                    <th>
+                                        A5ID
+                                    </th>
+                                    <th>
+                                        类型
+                                    </th>
+                                    <th>
+                                        时间
+                                    </th>
+                                    <!--<th><a href="javascript:void(0);" alt="案件信息的前150个汉字......">工单号</a></th>
+                                    <th>立案时间</th>
+                                    &lt;!&ndash;<th>
+                                        推送到市级平台(区县)
+                                    </th>&ndash;&gt;
+                                    <th>案件状态</th>
+                                    <th>工单号</th>
+                                    <th>案件状态</th>-->
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <tr th:each="case : ${allA5Notice}">
+                                    <td th:text="${case.a5ProcessInfoID}"></td>
+                                    <td th:text="${case.noticeInfoType}"></td>
+                                    <td th:text="${case.notifyTime}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div><!-- /.span -->
+                    </div><!-- /.row -->
+                    <!-- PAGE CONTENT ENDS -->
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.page-content -->
+    </div>
+</div><!-- /.main-content -->
+
+
+
+</body>
+
+<!-- basic scripts -->
+
+<!--[if !IE]> -->
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery.js'>" + "<" + "/script>");
+</script>
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery1x.js'>" + "<" + "/script>");
+</script>
+<![endif]-->
+
+<script type="text/javascript">
+    if ('ontouchstart' in document.documentElement) document.write("<script src='/assets/js/jquery.mobile.custom.js'>" + "<" + "/script>");
+
+    $(function () {
+        var Sys = {};
+        var ua = navigator.userAgent.toLowerCase();
+        if (window.ActiveXObject) {
+            Sys.ie = ua.match(/msie ([\d.]+)/)[1];
+            if (Sys.ie <= 9) {
+                $('#ie_lt9_alert').css({'display': 'block'});  //浏览器版本太旧提示。
+            }
+        }
+    });
+
+</script>
+
+<script src="/assets/js/bootstrap.js"></script>
+<!-- ace scripts -->
+<script src="/assets/js/ace/elements.scroller.js"></script><!--不能删除-->
+<script src="/assets/js/ace/elements.colorpicker.js"></script><!--颜色选择器：皮肤更换会用到-->
+<script src="/assets/js/ace/elements.fileinput.js"></script><!--Bootstrap 的文件上传，可删除-->
+<script src="/assets/js/ace/elements.typeahead.js"></script><!--Bootstrap 中的 Typeahead 组件就是通常所说的自动完成 AutoComplete，可删除-->
+<script src="/assets/js/ace/elements.wysiwyg.js"></script><!--所见即所得，可删除-->
+<script src="/assets/js/ace/elements.spinner.js"></script><!--可删除-->
+<script src="/assets/js/ace/elements.treeview.js"></script><!--可删除：树视图：无关菜单-->
+<script src="/assets/js/ace/elements.wizard.js"></script><!--可删除-->
+<script src="/assets/js/ace/elements.aside.js"></script><!--可删除-->
+<script src="/assets/js/ace/ace.js"></script>
+<script src="/assets/js/ace/ace.ajax-content.js"></script><!--可删除-->
+<script src="/assets/js/ace/ace.touch-drag.js"></script><!--可删除-->
+<script src="/assets/js/ace/ace.sidebar.js"></script><!--侧栏菜单控制：关闭隐藏-->
+<script src="/assets/js/ace/ace.sidebar-scroll-1.js"></script><!--侧栏菜单相关：简洁版菜单会用到-->
+<script src="/assets/js/ace/ace.submenu-hover.js"></script><!--侧栏菜单相关-->
+<script src="/assets/js/ace/ace.widget-box.js"></script><!--可删除-->
+<script src="/assets/js/ace/ace.settings.js"></script><!--设置：不能删除-->
+<script src="/assets/js/ace/ace.settings-rtl.js"></script><!--设置：不能删除-->
+<script src="/assets/js/ace/ace.settings-skin.js"></script><!--设置皮肤：不能删除-->
+<script src="/assets/js/ace/ace.widget-on-reload.js"></script><!--可删除-->
+<script src="/assets/js/ace/ace.searchbox-autocomplete.js"></script><!--可删除-->
+<script src="/assets/js/bootstrap-datepicker.min.js"></script>
+<script src="/assets/js/bootstrap-timepicker.min.js"></script>
+<script src="/assets/js/moment.min.js"></script>
+<script src="/assets/js/daterangepicker.min.js"></script>
+<script src="/assets/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/assets/js/jquery-confirm.js"></script>
+
+<script type="text/javascript">
+
+    $('.date-timepicker').datetimepicker({
+
+        format: 'YYYY-MM-DD HH:mm:ss',//use this option to display seconds
+        icons: {
+            time: 'fa fa-clock-o',
+            date: 'fa fa-calendar',
+            up: 'fa fa-chevron-up',
+            down: 'fa fa-chevron-down',
+            previous: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right',
+            today: 'fa fa-arrows ',
+            clear: 'fa fa-trash',
+            close: 'fa fa-times'
+        }
+    });
+
+
+</script>
+
+
+</html>
