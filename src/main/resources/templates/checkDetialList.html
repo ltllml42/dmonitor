@@ -110,6 +110,8 @@
                             <label class="inline">
                                 共计<span th:text="${count}"></span>条案件
                             </label>
+                            <input th:type="hidden" th:value="${type}" id="type"/>
+                            <button id="expExcel" class="btn btn-info btn-sm">导出excel</button>
                         </div>
 
                         <div class="col-xs-12">
@@ -247,6 +249,21 @@
             close: 'fa fa-times'
         }
     });
+
+    $("#expExcel").click(function () {
+        var type = $("#type").val();
+        //expExcel
+        /*$.ajax({
+            url:'/case/expExcel',
+            data:{type:type},
+            type:'post',
+            traditional: true,
+            success:function(data){
+
+            }
+        });*/
+        location.href="/case/expExcel?type="+type;
+    })
 
 
 </script>

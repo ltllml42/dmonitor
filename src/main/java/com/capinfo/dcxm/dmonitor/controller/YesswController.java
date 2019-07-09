@@ -1,18 +1,18 @@
 package com.capinfo.dcxm.dmonitor.controller;
 
-import com.capinfo.dcxm.dmonitor.client.YerSsWClient;
+import cn.afterturn.easypoi.excel.ExcelExportUtil;
+import cn.afterturn.easypoi.excel.entity.ExportParams;
+import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
+import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import com.capinfo.dcxm.dmonitor.dao.YesswCaseInfoDao;
-import com.capinfo.dcxm.dmonitor.entity.StreetEntity;
 import com.capinfo.dcxm.dmonitor.entity.YesswCaseInfo;
-import com.capinfo.dcxm.dmonitor.enums.StreeAccountEnum;
-import com.capinfo.dcxm.dmonitor.factory.YerssClientFactory;
 import com.capinfo.dcxm.dmonitor.service.CaseCountService;
 import com.capinfo.dcxm.dmonitor.service.YerssService;
 import com.capinfo.dcxm.dmonitor.utils.CaseCount;
 import com.capinfo.dcxm.dmonitor.utils.Constant;
 import com.capinfo.dcxm.dmonitor.utils.ResultData;
-import com.capinfo.dcxm.dmonitor.yerss.A5Notice;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +20,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static cn.afterturn.easypoi.excel.ExcelExportUtil.exportExcel;
 
 @RestController
 @RequestMapping(value = "/caseapi")
@@ -101,6 +108,12 @@ public class YesswController {
         CaseCount yesswExceptionCount = caseCountService.getCount(Constant.TYPE_YESSW_EXCEPTION, null);
         caseCountList.add(yesswExceptionCount);
 
+        CaseCount noticeCount = caseCountService.getCount(Constant.TYPE_YESSWFINISH_NOTICE, null);
+        caseCountList.add(noticeCount);
+
+        CaseCount yesswhuituiCount = caseCountService.getCount(Constant.TYPE_YESSWHUITUI_EXCEPTION, null);
+        caseCountList.add(yesswhuituiCount);
+
         result.setFlag(true);
         result.setMsg("success");
         result.setData(caseCountList);
@@ -154,52 +167,6 @@ public class YesswController {
         logger.info("againPushNotice recordNumber is {}",recordNumber);
         return yerssService.againPushNotice(recordNumber,a5Type);
     }
-    
-    
-    /*@RequestMapping(value = "getCaseByStreet")
-    public ResultData getCaseByStreet(HttpServletRequest request) {
-        String[] duallist = request.getParameterValues("duallist");
-        
-        List<StreetEntity> streetList = new ArrayList<StreetEntity>();
-        for (String str : duallist) {
-            for (StreeAccountEnum streeAccountEnum : StreeAccountEnum.values()) {
-                if (str.equals(streeAccountEnum.getDispatchUnit())) {
-                    StreetEntity street = new StreetEntity();
-                    street.setName(streeAccountEnum.getName());
-                    street.setAgentID(streeAccountEnum.getAgentID());
-                    street.setDelegateUUID(streeAccountEnum.getDelegateUUID());
-                    street.setOrderUnitID(streeAccountEnum.getOrderUnitID());
-                    street.setDispatchUnit(streeAccountEnum.getDispatchUnit());
-                    streetList.add(street);
-                    break;
-                }
-            }
-        }
-
-        List<A5Notice> allA5Notice= new ArrayList<A5Notice>();
-        for (StreetEntity streetEntity : streetList) {
-            YerSsWClient yerSsWClient=YerssClientFactory.getClient(streetEntity.getDelegateUUID(), streetEntity.getAgentID(), streetEntity.getOrderUnitID());
-
-            try {
-                List<A5Notice> listA5Notice = yerSsWClient.queryNotices();
-                for (A5Notice a5Notice : listA5Notice) {
-                    allA5Notice.add(a5Notice);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                continue;
-            }
-        }
-
-
-
-
-        ResultData result = new ResultData();
-        result.setFlag(true);
-        result.setMsg("success");
-        return result;
-    }*/
-    
 
 
 }
