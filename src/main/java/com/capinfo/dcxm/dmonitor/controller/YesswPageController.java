@@ -16,6 +16,7 @@ import com.capinfo.dcxm.dmonitor.factory.YerssClientFactory;
 import com.capinfo.dcxm.dmonitor.service.CaseCountService;
 import com.capinfo.dcxm.dmonitor.utils.CaseCount;
 import com.capinfo.dcxm.dmonitor.utils.Constant;
+import com.capinfo.dcxm.dmonitor.utils.ExcelUtils;
 import com.capinfo.dcxm.dmonitor.yerss.A5Notice;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -177,36 +178,12 @@ public class YesswPageController {
         try {
             Workbook workbook = ExcelExportUtil.exportExcel(params, YesswCaseInfo.class, list);
             //下载方法
-            export(response, workbook, "案件列表");
+            ExcelUtils.export(response, workbook, "案件列表");
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
-
-    /**
-     * export导出请求头设置
-     *
-     * @param response
-     * @param workbook
-     * @param fileName
-     * @throws Exception
-     */
-    private static void export(HttpServletResponse response, Workbook workbook, String fileName) throws Exception {
-        response.reset();
-        response.setContentType("application/x-msdownload");
-        fileName = fileName + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-        response.setHeader("Content-disposition", "attachment; filename=" + new String(fileName.getBytes("gb2312"), "ISO-8859-1") + ".xls");
-        ServletOutputStream outStream = null;
-        try {
-            outStream = response.getOutputStream();
-            workbook.write(outStream);
-        } finally {
-            outStream.close();
-        }
-    }
 
 
 }
