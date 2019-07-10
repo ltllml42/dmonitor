@@ -31,7 +31,7 @@
     <!--[if lte IE 9]>
     <link rel="stylesheet" href="../assets/css/ace-ie.css" />
     <![endif]-->
-
+    <link rel="stylesheet" href="/assets/layer/theme/default/layer.css"/>
     <!-- inline styles related to this page -->
 
     <!-- ace settings handler -->
@@ -64,23 +64,23 @@
                                 <label class="col-sm-3 control-label no-padding-top" for="duallist">检查接口及账户状态：</label>
                                 <div class="col-sm-8">
                                     <select multiple="multiple" size="10" name="duallistbox_demo1[]" id="duallist">
-                                        <option value="option1">东华门街道</option>
-                                        <option value="option2">景山街道</option>
-                                        <option value="option3">交道口街道</option>
-                                        <option value="option4">安定门街道</option>
-                                        <option value="option5">北新桥街道</option>
-                                        <option value="option6">东四街道</option>
-                                        <option value="option7">朝阳门街道</option>
-                                        <option value="option8">建国门街道</option>
-                                        <option value="option9">东直门街道</option>
-                                        <option value="option10">和平里街道</option>
-                                        <option value="option11">前门街道</option>
-                                        <option value="option12">崇文门外街道</option>
-                                        <option value="option13">东花市街道</option>
-                                        <option value="option14">龙潭街道</option>
-                                        <option value="option15">体育馆路街道</option>
-                                        <option value="option16">天坛街道</option>
-                                        <option value="option17">永定门外街道</option>
+                                        <option value="106">东华门街道</option>
+                                        <option value="112">景山街道</option>
+                                        <option value="111">交道口街道</option>
+                                        <option value="101">安定门街道</option>
+                                        <option value="102">北新桥街道</option>
+                                        <option value="107">东四街道</option>
+                                        <option value="103">朝阳门街道</option>
+                                        <option value="110">建国门街道</option>
+                                        <option value="108">东直门街道</option>
+                                        <option value="109">和平里街道</option>
+                                        <option value="114">前门街道</option>
+                                        <option value="104">崇文门外街道</option>
+                                        <option value="105">东花市街道</option>
+                                        <option value="113">龙潭街道</option>
+                                        <option value="115">体育馆路街道</option>
+                                        <option value="116">天坛街道</option>
+                                        <option value="117">永定门外街道</option>
                                     </select>
                                     <div class="hr hr-16 hr-dotted" id="duallist2"></div>
                                 </div>
@@ -122,6 +122,7 @@
     window.jQuery || document.write("<script src='../assets/js/jquery1x.js'>"+"<"+"/script>");
 </script>
 <![endif]-->
+<script src="/assets/layer/layer.js"></script>
 <script type="text/javascript">
     if('ontouchstart' in document.documentElement) document.write("<script src='../assets/js/jquery.mobile.custom.js'>"+"<"+"/script>");
 </script>
@@ -556,15 +557,15 @@
         $("#accessCasesCount").click(function () {
 
             var duallist = $("#duallist").val();
-            $.ajax({
-                url:'/caseapi/getCaseByStreet',
-                data:{duallist:duallist},
-                type:'post',
-                traditional: true,
-                success:function(data){
-
-                }
+            layer.open({
+                type: 2,
+                area: ["1100px", "300px"],
+                title:"<div align='center'>查看抓取详情</div>",
+                fixed: false, //不固定
+                maxmin: false,
+                content: "/case/getCaseByStreet?duallist="+duallist
             });
+
         });
 
 

@@ -243,16 +243,16 @@
     if('ontouchstart' in document.documentElement) document.write("<script src='../assets/js/jquery.mobile.custom.js'>"+"<"+"/script>");
     $(function(){
         var Sys = {};
-    var ua = navigator.userAgent.toLowerCase();
-    if (window.ActiveXObject){
-        Sys.ie = ua.match(/msie ([\d.]+)/)[1];
-        if (Sys.ie<=9){
-            $('#ie_lt9_alert').css({'display':'block'});  //浏览器版本太旧提示。
+        var ua = navigator.userAgent.toLowerCase();
+        if (window.ActiveXObject){
+            Sys.ie = ua.match(/msie ([\d.]+)/)[1];
+            if (Sys.ie<=9){
+                $('#ie_lt9_alert').css({'display':'block'});  //浏览器版本太旧提示。
+            }
         }
-    }
     });
-    
-    
+
+
     function replyCase() {
         $.ajax({
             url:'/caseapi/replyCase',
@@ -272,13 +272,13 @@
             }
         });
     }
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
 
 </script>
 <script src="../assets/js/bootstrap.js"></script>

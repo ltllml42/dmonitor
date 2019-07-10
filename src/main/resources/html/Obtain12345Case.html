@@ -380,8 +380,14 @@
                             traditional: true,
                             success:function(data){
                                 //layer.msg("获取数据完成");
-                                alert("获取数据完成");
-                                selectData();
+                                var flag = data.flag;
+                                if (flag) {
+                                    alert("获取数据完成");
+                                    selectData();
+                                } else {
+                                    alert("获取数据失败");
+                                }
+
                             }
                         });
                     }

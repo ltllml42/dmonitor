@@ -1,5 +1,7 @@
 package com.capinfo.dcxm.dmonitor.entity;
 
+import cn.afterturn.easypoi.excel.annotation.Excel;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -10,18 +12,27 @@ import java.util.Objects;
 public class YesswCaseInfo {
 
     private String id;
+    @Excel(name = "12345工单号", orderNum = "1")
     private String yesswNumber;
+    @Excel(name = "12345案件立案时间", orderNum = "2")
     private String yesswCreatetime;
     private String yesswSendarea;
+    @Excel(name = "12345案件状态", orderNum = "3")
     private String yesswStatus;
+    @Excel(name = "96010工单号", orderNum = "4")
     private String recordNumber;
     private String recordCreatetime;
+    @Excel(name = "96010案件状态", orderNum = "5")
     private String recordStatus;
+    @Excel(name = "96010案件任务状态", orderNum = "6")
     private String recordTaskStatus;
+    @Excel(name = "城管任务号", orderNum = "7")
     private String cityNumber;
+    @Excel(name = "城管任务状态", orderNum = "8")
     private String cityStatus;
     private String createTime;
     private String content;
+    @Excel(name = "案件截止时间", orderNum = "9")
     private String recordDeadtime;
 
     //查询条件  案件时间起
