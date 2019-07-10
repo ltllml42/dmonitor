@@ -193,8 +193,8 @@ public class CaseCountService {
                 }
                 startPage++;
             }
-            List<YesswCaseInfo> caseList = yesswCaseInfoDao.findByYesswStatusNot(Constant.YESSW_STATUS_FINISH);
-            //List<YesswCaseInfo> caseList = yesswCaseInfoDao.findByYesswStatusNotAndYesswCreatetimeAfterAndYesswCreatetimeBefore(Constant.YESSW_STATUS_FINISH, beginCalltime, endCalltime);
+            //List<YesswCaseInfo> caseList = yesswCaseInfoDao.findByYesswStatusNot(Constant.YESSW_STATUS_FINISH);
+            List<YesswCaseInfo> caseList = yesswCaseInfoDao.findByYesswStatusNotAndYesswCreatetimeAfterAndYesswCreatetimeBefore(Constant.YESSW_STATUS_FINISH, beginCalltime, endCalltime);
 
             //这里需要in出来工单表里infoList中的12345工单号包含的数据
             List<String> yesswOrderIdList = new ArrayList<String>();
@@ -222,12 +222,14 @@ public class CaseCountService {
                     batchList.add(yesswCaseInfo);
                 } else {
                     //如果是没结案的才往数据库里插
-                    if (!Constant.YESSW_STATUS_FINISH.equals(yesswCaseInfo.getYesswStatus())) {
+                    /*if (!Constant.YESSW_STATUS_FINISH.equals(yesswCaseInfo.getYesswStatus())) {
                         yesswCaseInfo.setId(UUID.randomUUID().toString().replaceAll("-",""));
                         yesswCaseInfo.setCreateTime(sdftime.format(new Date()));
                         batchList.add(yesswCaseInfo);
-                    }
-
+                    }*/
+                    yesswCaseInfo.setId(UUID.randomUUID().toString().replaceAll("-",""));
+                    yesswCaseInfo.setCreateTime(sdftime.format(new Date()));
+                    batchList.add(yesswCaseInfo);
                 }
             }
             yesswCaseInfoDao.saveAll(batchList);
