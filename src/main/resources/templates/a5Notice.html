@@ -106,11 +106,11 @@
                                 </div>
                             </div>
                         </div>-->
-                        <div>
-                            <label class="inline">
-                                共计<span th:text="${count}"></span>条案件
-                            </label>
-                        </div>
+                        <!--<div>-->
+                            <!--<label class="inline">-->
+                                <!--共计<span th:text="${count}"></span>条案件-->
+                            <!--</label>-->
+                        <!--</div>-->
 
                         <div class="col-xs-12">
                             <table id="simple-table" class="table  table-bordered table-hover">
@@ -123,14 +123,24 @@
                                 </tr>-->
                                 <tr>
                                     <!--<th><a href="javascript:void(0);" alt="案件信息的前150个汉字......">工单号</a></th>-->
+                                    <!--<th>-->
+                                        <!--A5ID-->
+                                    <!--</th>-->
+                                    <!--<th>-->
+                                        <!--类型-->
+                                    <!--</th>-->
+                                    <!--<th>-->
+                                        <!--时间-->
+                                    <!--</th>-->
+
+                                    <!--<th>-->
+                                        <!--A5ID-->
+                                    <!--</th>-->
                                     <th>
-                                        A5ID
+                                        街道名称
                                     </th>
                                     <th>
-                                        类型
-                                    </th>
-                                    <th>
-                                        时间
+                                        数量
                                     </th>
                                     <!--<th><a href="javascript:void(0);" alt="案件信息的前150个汉字......">工单号</a></th>
                                     <th>立案时间</th>
@@ -144,10 +154,11 @@
                                 </thead>
 
                                 <tbody>
-                                <tr th:each="case : ${allA5Notice}">
-                                    <td th:text="${case.a5ProcessInfoID}"></td>
-                                    <td th:text="${case.noticeInfoType}"></td>
-                                    <td th:text="${case.notifyTime}"></td>
+                                <tr th:each="case : ${caseCounts}">
+                                    <td th:text="${case.name}"></td>
+                                    <td th:text="${case.count}"></td>
+                                    <!--<td th:text="${case.noticeInfoType}"></td>-->
+                                    <!--<td th:text="${case.notifyTime}"></td>-->
                                 </tr>
                                 </tbody>
                             </table>
