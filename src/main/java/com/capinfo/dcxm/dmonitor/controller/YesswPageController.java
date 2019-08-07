@@ -8,6 +8,7 @@ import com.capinfo.dcxm.dmonitor.client.YerSsWClient;
 import com.capinfo.dcxm.dmonitor.dao.CapBusiRecordDao;
 import com.capinfo.dcxm.dmonitor.dao.YesswCaseInfoDao;
 import com.capinfo.dcxm.dmonitor.entity.CapBusiRecord;
+import com.capinfo.dcxm.dmonitor.entity.Result;
 import com.capinfo.dcxm.dmonitor.entity.StreetEntity;
 import com.capinfo.dcxm.dmonitor.entity.YesswCaseInfo;
 import com.capinfo.dcxm.dmonitor.enums.NoticeInfoTypeEnum;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -184,6 +186,20 @@ public class YesswPageController {
         }
     }
 
+
+    /**
+     *
+     */
+    @RequestMapping(value = "tongbu")
+    @ResponseBody
+    public Result tongbu() {
+        List<YesswCaseInfo> all = yesswCaseInfoDao.findAll();
+        caseCountService.checkCityStatus(all);
+        yesswCaseInfoDao.saveAll(all);
+        Result r=new Result();
+        r.setStatus(200);
+        return r;
+    }
 
 
 }

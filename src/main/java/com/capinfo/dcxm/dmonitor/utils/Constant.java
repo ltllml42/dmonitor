@@ -51,5 +51,7 @@ public class Constant {
      * 12345案件状态是结案的    审核回复工单并完成
      */
     public static final String YESSW_STATUS_FINISH = "审核回复工单并完成";
+    //城管任务完成状态
+    public static final String CITY_STATUS_FINISH = "1";
 
 }

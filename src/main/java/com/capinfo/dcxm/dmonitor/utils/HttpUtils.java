@@ -157,7 +157,7 @@ public class HttpUtils {
 	        HttpClient httpClient = new HttpClient();// 客户端实例化
 	        PostMethod postMethod = new PostMethod(requestUrl);
 	        //设置请求头Authorization
-	        postMethod.setRequestHeader("Authorization", "Bearer 59969f51e4bf03b8c32e48ad4b9021b1");
+	        postMethod.setRequestHeader("Authorization", authorization);
 //	        postMethod.setRequestHeader("Cookie", "hollysmart.session.id=9af4e2b724e64a2195c1bdad92a1a576");
 	        // 设置请求头  Content-Type
 	        postMethod.setRequestHeader("Content-Type", "application/json");

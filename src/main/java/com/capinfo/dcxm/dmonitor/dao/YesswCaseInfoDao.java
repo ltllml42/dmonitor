@@ -53,6 +53,8 @@ public interface YesswCaseInfoDao extends JpaRepository<YesswCaseInfo, String>, 
      * @return
      */
     List<YesswCaseInfo> findByRecordDeadtimeBefore(String deadtimeQuery);
+    //根据数字政通状态查询
+    List<YesswCaseInfo> findByCityStatusNot(String cityStatus);
 
 
     //void batchSave(Iterable<YesswCaseInfo> var1);

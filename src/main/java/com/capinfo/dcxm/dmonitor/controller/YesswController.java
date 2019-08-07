@@ -72,9 +72,10 @@ public class YesswController {
         String caseNum = request.getParameter("caseNum");
         String filingBeginTime = request.getParameter("filingBeginTime");
         String filingOverTime = request.getParameter("filingOverTime");
+        String yerssToken = request.getParameter("yerssToken");
         ResultData result = new ResultData();
         try {
-            caseCountService.saveYesswCase(filingBeginTime, filingOverTime, caseNum);
+            caseCountService.saveYesswCase(filingBeginTime, filingOverTime, caseNum,yerssToken);
             result.setFlag(true);
             result.setMsg("success");
         } catch (Exception e) {
@@ -96,6 +97,8 @@ public class YesswController {
         caseCountList.add(yesswCount);
         CaseCount recordCount = caseCountService.getCount(Constant.TYPE_RECORD, null);
         caseCountList.add(recordCount);
+        CaseCount cityCount = caseCountService.getCount(Constant.TYPE_CITY, null);
+        caseCountList.add(cityCount);
         CaseCount finishCount = caseCountService.getCount(Constant.TYPE_FINISH, null);
         caseCountList.add(finishCount);
         //推送城管系统后未能获取到城管案件编号

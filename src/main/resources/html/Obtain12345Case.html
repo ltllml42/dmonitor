@@ -372,10 +372,12 @@
                         var caseNum = this.$content.find('#caseNum').val();
                         var filingBeginTime = this.$content.find('#filingBeginTime').val();
                         var filingOverTime = this.$content.find('#filingOverTime').val();
+                        var yerssToken = this.$content.find('#yerssToken').val();
 
                         $.ajax({
                             url:'/caseapi/getData',
-                            data:{caseNum:this.$content.find('#caseNum').val(),filingBeginTime:this.$content.find('#filingBeginTime').val(),filingOverTime:this.$content.find('#filingOverTime').val()},
+                            data:{caseNum:this.$content.find('#caseNum').val(),filingBeginTime:this.$content.find('#filingBeginTime').val(),
+                                filingOverTime:this.$content.find('#filingOverTime').val(),yerssToken:this.$content.find('#yerssToken').val()},
                             type:'post',
                             traditional: true,
                             success:function(data){

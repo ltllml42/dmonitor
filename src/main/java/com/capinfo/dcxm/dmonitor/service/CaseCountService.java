@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -47,6 +48,8 @@ public class CaseCountService {
 
 
     private static final String url="http://172.26.54.61/admin/api/order/list";
+    private static final String CITY_URL="http://172.25.72.209/eGovaMISV14/v1/getRecState";
+    private static final String TOKEN="Bearer e02b489dd3d1a38fd7d51d7ca12f3128";
     /**
      * 统计案件数量
      * @param type  要统计的案件类型
@@ -76,7 +79,11 @@ public class CaseCountService {
                 break;
             case Constant.TYPE_CITY:
                 count.setType(Constant.TYPE_CITY);
-                count.setCount(0+"");
+                List<YesswCaseInfo> cityNotFinish = yesswCaseInfoDao.findByCityStatusNot(Constant.CITY_STATUS_FINISH);
+                count.setCount(cityNotFinish.size()+"");
+                if ("check".equals(way)) {
+                    count.setCaseList(cityNotFinish);
+                }
                 break;
             case Constant.TYPE_FINISH:
                 count.setType(Constant.TYPE_FINISH);
@@ -141,7 +148,7 @@ public class CaseCountService {
      * 如果这条数据是已经结案的，查一下在表里有没有这条数据，如果有把状态改成已结案的
      * @return
      */
-    public void saveYesswCase(String starttime, String endtime, String caseNum) {
+    public void saveYesswCase(String starttime, String endtime, String caseNum,String yerssToken) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat sdftime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date nowDate = new Date();
@@ -179,7 +186,7 @@ public class CaseCountService {
             while(totalPage>=startPage){
                 queryParam.setPageNo(startPage);
                 String param=JsonUtil.objectToJsonStr(queryParam);
-                String result=HttpUtils.sendPost12345(param, url, "");
+                String result=HttpUtils.sendPost12345(param, url, StringUtils.isNotBlank(yerssToken)?yerssToken:TOKEN);
                 Result r=JsonUtil.jsonStrToPo(result, Result.class);
                 DataBean dataBean=r.getData();
                 totalPage=dataBean.getTotalPage();
@@ -198,10 +205,18 @@ public class CaseCountService {
 
             //这里需要in出来工单表里infoList中的12345工单号包含的数据
             List<String> yesswOrderIdList = new ArrayList<String>();
+            List<CapBusiRecord> recordList=new ArrayList<>(infoList.size());
+            int infoCount=0;
             for (YesswCaseInfo yesswCaseInfo : infoList) {
+                infoCount++;
                 yesswOrderIdList.add(yesswCaseInfo.getYesswNumber());
+                if(infoCount%900==0||infoCount==infoList.size()){
+                    List<CapBusiRecord> tempRecordList=capBusiRecordDao.findByYesswOrderIdIn(yesswOrderIdList);
+                    recordList.addAll(tempRecordList);
+                    yesswOrderIdList=new ArrayList<>();
+                }
             }
-            List<CapBusiRecord> recordList = capBusiRecordDao.findByYesswOrderIdIn(yesswOrderIdList);
+//            List<CapBusiRecord> recordList = capBusiRecordDao.findByYesswOrderIdIn(yesswOrderIdList);
             //把工单表查出来的字段都放到infoList里
             setRecordInfo(infoList, recordList);
             //判断出来需要操作update或者insert的数据，放到这个新的集合里。统一一起操作数据库
@@ -283,13 +298,62 @@ public class CaseCountService {
             }
         }
         //在这下边可能要加上数字政通的接口，传入一个工单号的集合，得到对应的数据，把城管的工单状态在这里放回每个对应的对象里
-
+        checkCityStatus(yesswCaseInfoList);
 
 
     }
 
+    public void checkCityStatus(List<YesswCaseInfo> yesswCaseInfoList) {
+        int i=0;
+        StringBuffer stringBuffer=new StringBuffer();
+        Map<String,String> resultMap=new HashMap<>();
+        for(YesswCaseInfo yesswCaseInfo:yesswCaseInfoList){
+            i++;
+            if(i%50==0||i==yesswCaseInfoList.size()){
+                stringBuffer.append(yesswCaseInfo.getCityNumber()+",");
+                getCityInfo(stringBuffer.toString(),resultMap);
+                stringBuffer=new StringBuffer();
+            }else{
+                stringBuffer.append(yesswCaseInfo.getCityNumber()+",");
+            }
+        }
+
+        yesswCaseInfoList.forEach(r->{
+            r.setCityStatus(resultMap.get(r.getCityNumber()));
+        });
 
 
+    }
+
+    private void getCityInfo(String s, Map<String,String> resultMap) {
+        Map<String,Object> map=new HashMap<>();
+        map.put("taskNum",s);
+        try {
+            String result = HttpUtils.doPost(CITY_URL, map);
+            if(StringUtils.isNotBlank(result)){
+                CityResult cityResult = JsonUtil.jsonStrToPo(result, CityResult.class);
+                ResultInfo resultInfo = cityResult.getResultInfo();
+                if(resultInfo.isSuccess()){
+                    List<DataInfo> info = resultInfo.getData().getInfo();
+                    info.forEach(r->{
+                        resultMap.put(r.getTaskNum(),getCityStatus(r));
+                    });
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    private String getCityStatus(DataInfo r) {
+      if("101".equals(r.getActPropertyID())||"102".equals(r.getActPropertyID())){
+        return Constant.CITY_STATUS_FINISH;
+      }
+      return "0";
+    }
 
     /**
      * websocket发送信息
